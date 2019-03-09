@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE.TXT = LICENSE.TXT
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JNysteen.FileTypeIdentifier.ConsoleApplication", "Samples\JNysteen.FileTypeIdentifier.ConsoleApplication\JNysteen.FileTypeIdentifier.ConsoleApplication.csproj", "{A5AFD976-21C3-4873-B1A3-D00C9C623628}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{183F8CFE-143F-4B61-8AEA-D13C78158A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{183F8CFE-143F-4B61-8AEA-D13C78158A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{183F8CFE-143F-4B61-8AEA-D13C78158A18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5AFD976-21C3-4873-B1A3-D00C9C623628}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5AFD976-21C3-4873-B1A3-D00C9C623628}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5AFD976-21C3-4873-B1A3-D00C9C623628}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5AFD976-21C3-4873-B1A3-D00C9C623628}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

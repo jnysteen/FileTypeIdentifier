@@ -13,10 +13,18 @@ namespace JNysteen.FileTypeIdentifier.Interfaces
         IEnumerable<(byte?[] fileSignature, string fileType)> FileSignatures { get; }
 
         /// <summary>
-        ///     Adds a file signature to the mapping table. `null`-values in the signature byte array are wildcards that allow for
+        ///     Adds a file signature for the given file type to the mapping table. `null`-values in the signature byte array are
+        ///     wildcards that allow for
         ///     any byte values at the given indices.
         /// </summary>
         void AddFileSignature(byte?[] signature, string fileType);
+
+        /// <summary>
+        ///     Adds file signatures for the given file type to the mapping table. `null`-values in the signature byte array are
+        ///     wildcards that allow for
+        ///     any byte values at the given indices.
+        /// </summary>
+        void AddFileSignatures(IEnumerable<byte?[]> signatures, string fileType);
 
         /// <summary>
         ///     Retrieves the length of the longest signature found in the mapping table.

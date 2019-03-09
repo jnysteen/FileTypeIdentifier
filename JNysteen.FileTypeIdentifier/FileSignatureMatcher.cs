@@ -4,7 +4,7 @@ using JNysteen.FileTypeIdentifier.Interfaces;
 namespace JNysteen.FileTypeIdentifier
 {
     /// <inheritdoc />
-    public class FileSignatureMatcher : IFileSignatureMatcher
+    internal class FileSignatureMatcher : IFileSignatureMatcher
     {
         private readonly IFileSignatureMapping _fileSignatureMapping;
 

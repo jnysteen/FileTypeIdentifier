@@ -42,6 +42,13 @@ namespace JNysteen.FileTypeIdentifier
         }
 
         /// <inheritdoc />
+        public void AddFileSignatures(IEnumerable<byte?[]> signatures, string fileType)
+        {
+            foreach (var signature in signatures)
+                AddFileSignature(signature, fileType);
+        }
+
+        /// <inheritdoc />
         public int GetLongestSignature()
         {
             if (!FileSignaturesMappingTable.Any())

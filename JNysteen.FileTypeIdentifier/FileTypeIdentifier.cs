@@ -11,9 +11,18 @@ namespace JNysteen.FileTypeIdentifier
         /// <summary>
         ///     Creates a FileTypeIdentifier that will match file signatures using the provided file signature matcher.
         /// </summary>
-        public FileTypeIdentifier(IFileSignatureMatcher fileSignatureMatcher)
+        internal FileTypeIdentifier(IFileSignatureMatcher fileSignatureMatcher)
         {
             _fileSignatureMatcher = fileSignatureMatcher;
+        }
+
+        /// <summary>
+        ///     Creates a FileTypeIdentifier that will match file signatures using the provided file signature mapping and the
+        ///     default signature matcher.
+        /// </summary>
+        public FileTypeIdentifier(IFileSignatureMapping fileSignatureMapping)
+        {
+            _fileSignatureMatcher = new FileSignatureMatcher(fileSignatureMapping);
         }
 
         /// <inheritdoc />

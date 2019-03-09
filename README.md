@@ -14,3 +14,8 @@ I will personally be using this project when...:
 * ... quickly determining whether a file is a type of file my application can handle or not.
 * ... determining the type of files received in web services, where the extension of the file might not match the actual file type.
 * ... deciding how to process files based on their actual file type.
+
+
+## How to use
+
+ [A small console application](.\Samples\JNysteen.FileTypeIdentifier.ConsoleApplication) using the file type identifier can be found in [the samples folder](.\Samples\).
