@@ -1,6 +1,6 @@
 # FileTypeIdentifier
 
-`FileTypeIdentifier` is a simple component that can match files with a user-configurable collection of file signatures.
+`FileTypeIdentifier` is a simple component that can identify files types using a user-configurable collection of file signatures.
 
 This component is not designed with any black-magic, super-efficient file type checking tricks in mind - it identifies a file by matching the file's signature with a user-configured collection of file signatures.
 
@@ -18,4 +18,4 @@ I will personally be using this project when...:
 
 ## How to use
 
- [A small console application](.\Samples\JNysteen.FileTypeIdentifier.ConsoleApplication) using the file type identifier can be found in [the samples folder](.\Samples\).
+ [A small console application](.\Samples\JNysteen.FileTypeIdentifier.ConsoleApplication) using the file type identifier can be found in [the samples folder](.\Samples).
