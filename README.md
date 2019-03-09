@@ -18,4 +18,4 @@ I will personally be using this project when...:
 
 ## How to use
 
- [A small console application](.\Samples\JNysteen.FileTypeIdentifier.ConsoleApplication) using the file type identifier can be found in [the samples folder](.\Samples).
+ [A small console application](./Samples/JNysteen.FileTypeIdentifier.ConsoleApplication) using the file type identifier can be found in [the samples folder](./Samples).
