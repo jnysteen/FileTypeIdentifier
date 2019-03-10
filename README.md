@@ -7,6 +7,16 @@ This component is not designed with any black-magic, super-efficient file type c
 Found inside this component is a [very limited set of pairs of magic numbers and file names](./JNysteen.FileTypeIdentifier/MagicNumbers) (based on my current needs use cases for identifying files). 
 If you feel like the set of preconfigured magic numbers is too limited, you are more than welcome to contact me with suggestions.
 
+## Features - spelled out
+
+**What the `FileTypeIdentifier` can do:**
+* Look at the header of a file and tell whether the file's magic number matches a known type or not.
+
+**What the `FileTypeIdentifier` *cannot* do:**
+* Guarantee that the file is actually of the type, that its magic number indicate.
+* Ensure that the file is not corrupt.
+
+
 ## Use cases
 
 I will personally be using this project when...:
