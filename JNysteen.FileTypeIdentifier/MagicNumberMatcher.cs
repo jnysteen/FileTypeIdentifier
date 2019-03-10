@@ -36,11 +36,9 @@ namespace JNysteen.FileTypeIdentifier
                 if (fileContentsContainingHeader.Length < magicNumber.Length)
                     continue;
 
-                var shortestSequence = Math.Min(fileContentsContainingHeader.Length, magicNumber.Length);
-
                 var failed = false;
 
-                for (var i = 0; i < shortestSequence; i++)
+                for (var i = 0; i < magicNumber.Length; i++)
                 {
                     var magicNumberByte = magicNumber[i];
 
@@ -48,11 +46,11 @@ namespace JNysteen.FileTypeIdentifier
                     if (magicNumberByte == null)
                         continue;
 
-                    if (magicNumberByte != fileContentsContainingHeader[i])
-                    {
-                        failed = true;
-                        break;
-                    }
+                    if (magicNumberByte == fileContentsContainingHeader[i]) 
+                        continue;
+                    
+                    failed = true;
+                    break;
                 }
 
                 if (!failed)
