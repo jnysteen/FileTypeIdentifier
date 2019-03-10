@@ -6,6 +6,13 @@
     <Title>JNysteen.FileTypeIdentifier</Title>
     <Authors>Jesper Nysteen (code@jnysteen.com)</Authors>
     <Description>FileTypeIdentifier is a simple component that can identify files types using a user-configurable collection of files' magic numbers.</Description>
+    <Copyright>Jesper Nysteen</Copyright>
+    <PackageProjectUrl>https://github.com/jnysteen/FileTypeIdentifier</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/jnysteen/FileTypeIdentifier/blob/master/LICENSE.TXT</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/jnysteen/FileTypeIdentifier</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>magicnumber magic filetype file</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
 </Project>
