@@ -13,6 +13,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>magicnumber magic filetype file</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageVersion>1.0.1</PackageVersion>
   </PropertyGroup>
 
 </Project>
