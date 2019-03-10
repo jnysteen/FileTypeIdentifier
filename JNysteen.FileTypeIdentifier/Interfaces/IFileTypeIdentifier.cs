@@ -18,5 +18,11 @@ namespace JNysteen.FileTypeIdentifier.Interfaces
         ///     - otherwise, null is returned.
         /// </summary>
         string GetFileType(byte[] fileContents);
+        
+        /// <summary>
+        ///     Attempts to identify the file type by reading the file from the provided path. If the file type is recognized, the name of it is returned
+        ///     - otherwise, null is returned.
+        /// </summary>
+        string GetFileType(string filePath);
     }
 }

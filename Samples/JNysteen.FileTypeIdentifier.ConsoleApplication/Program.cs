@@ -14,7 +14,7 @@ namespace JNysteen.FileTypeIdentifier.ConsoleApplication
              *    A file type identifier is instantiated with this mapping, enabling it to recognize PDF files.
              *
              *    The input loop asks the user for a file path and, using the file type identifier, tells the user
-             *    whether the inputted file was a PDF or not. 
+             *    whether the provided file was a PDF or not. 
              */
 
             // Instantiate a mapping of the file magic numbers that should be recognized

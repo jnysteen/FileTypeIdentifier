@@ -40,5 +40,12 @@ namespace JNysteen.FileTypeIdentifier
         {
             return _fileMagicNumberMatcher.MatchFileType(fileContents);
         }
+
+        /// <inheritdoc />
+        public string GetFileType(string filePath)
+        {
+            using (var fileStream = File.OpenRead(filePath))
+                return GetFileType(fileStream);
+        }
     }
 }
