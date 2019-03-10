@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using JNysteen.FileTypeIdentifier.Interfaces;
 
 namespace JNysteen.FileTypeIdentifier
@@ -39,6 +41,14 @@ namespace JNysteen.FileTypeIdentifier
         public string GetFileType(byte[] fileContents)
         {
             return _fileMagicNumberMatcher.MatchFileType(fileContents);
+        }
+
+        public string GetFileType(IEnumerable<byte> fileContents)
+        {
+            var longestMagicNumber = _fileMagicNumberMatcher.GetLongestMagicNumber();
+            var fileHeader = fileContents.Take(longestMagicNumber).ToArray();
+            
+            return GetFileType(fileHeader);
         }
 
         /// <inheritdoc />

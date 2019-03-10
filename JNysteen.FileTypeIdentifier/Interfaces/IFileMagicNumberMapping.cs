@@ -8,9 +8,9 @@ namespace JNysteen.FileTypeIdentifier.Interfaces
     public interface IFileMagicNumberMapping
     {
         /// <summary>
-        ///     Retrieves the magic numbers configured in this mapping.
+        ///     Retrieves the magic numbers configured in this mapping, in a descending order by the length of the magic numbers.
         /// </summary>
-        IEnumerable<(byte?[] magicNumber, string fileType)> FileMagicNumbers { get; }
+        IEnumerable<(byte?[] magicNumber, string fileType)> FileMagicNumbersByLength { get; }
 
         /// <summary>
         ///     Adds a magic numbers for the given file type to the mapping table. `null`-values in the magic number byte array are

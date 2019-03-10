@@ -50,5 +50,25 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
             var actualFileTypeLower = actualFileType.ToLower();
             Assert.Equal(actualFileTypeLower, identifiedFileTypeLower);
         }
+        
+        [Theory]
+        [MemberData(nameof(TestFiles))]
+        public void CorrectlyIdentifiesTestFiles_ByteEnumerableAsInput(Tuple<string, string> filePathAndActualFileType)
+        {
+            var fileMagicNumberMapping = IntegrationTestsHelper.GetAllMappings();
+            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
+            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMatcher);
+
+            var (filePath, actualFileType) = filePathAndActualFileType;
+
+            var fileBytesAsEnumerable = File.ReadAllBytes(filePath).AsEnumerable();
+
+            var identifiedFileType = fileTypeIdentifier.GetFileType(fileBytesAsEnumerable);
+            Assert.NotNull(identifiedFileType);
+
+            var identifiedFileTypeLower = identifiedFileType.ToLower();
+            var actualFileTypeLower = actualFileType.ToLower();
+            Assert.Equal(actualFileTypeLower, identifiedFileTypeLower);
+        }
     }
 }

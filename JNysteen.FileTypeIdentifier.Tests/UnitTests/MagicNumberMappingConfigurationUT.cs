@@ -18,6 +18,18 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 
             Assert.Throws<ArgumentException>(() => magicNumberMapping.AddMagicNumber(magicNumber, fileType));
         }
+        
+        [Fact]
+        public void AddMagicNumbers_MagicNumberEmpty_Negative()
+        {
+            var magicNumbers = new byte?[][] {new byte?[0]};
+            var fileType = "test";
+
+            var magicNumberMapping = new MagicNumberMapping();
+            Assert.Empty(magicNumberMapping.FileMagicNumberMappingTable);
+
+            Assert.Throws<ArgumentException>(() => magicNumberMapping.AddMagicNumbers(magicNumbers, fileType));
+        }
 
         [Fact]
         public void AddMagicNumber_MagicNumberNull_Negative()
@@ -29,6 +41,18 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             Assert.Empty(magicNumberMapping.FileMagicNumberMappingTable);
 
             Assert.Throws<ArgumentNullException>(() => magicNumberMapping.AddMagicNumber(magicNumber, fileType));
+        }
+        
+        [Fact]
+        public void AddMagicNumbers_MagicNumberNull_Negative()
+        {
+            var magicNumbers = new byte?[][]{null};
+            var fileType = "test";
+
+            var magicNumberMapping = new MagicNumberMapping();
+            Assert.Empty(magicNumberMapping.FileMagicNumberMappingTable);
+
+            Assert.Throws<ArgumentNullException>(() => magicNumberMapping.AddMagicNumbers(magicNumbers, fileType));
         }
 
         [Fact]
@@ -42,6 +66,18 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 
             Assert.Throws<ArgumentException>(() => magicNumberMapping.AddMagicNumber(magicNumber, fileType));
         }
+        
+        [Fact]
+        public void AddMagicNumbers_FileTypeEmpty_Negative()
+        {
+            var magicNumbers = new byte?[][] {new byte?[] {1, null, 3}};
+            var fileType = " ";
+
+            var magicNumberMapping = new MagicNumberMapping();
+            Assert.Empty(magicNumberMapping.FileMagicNumberMappingTable);
+
+            Assert.Throws<ArgumentException>(() => magicNumberMapping.AddMagicNumbers(magicNumbers, fileType));
+        }
 
         [Fact]
         public void AddMagicNumber_FileTypeNull_Negative()
@@ -53,6 +89,18 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             Assert.Empty(magicNumberMapping.FileMagicNumberMappingTable);
 
             Assert.Throws<ArgumentNullException>(() => magicNumberMapping.AddMagicNumber(magicNumber, fileType));
+        }
+        
+        [Fact]
+        public void AddMagicNumbers_FileTypeNull_Negative()
+        {
+            var magicNumbers = new byte?[][] {new byte?[] {1, null, 3}};
+            string fileType = null;
+
+            var magicNumberMapping = new MagicNumberMapping();
+            Assert.Empty(magicNumberMapping.FileMagicNumberMappingTable);
+
+            Assert.Throws<ArgumentNullException>(() => magicNumberMapping.AddMagicNumbers(magicNumbers, fileType));
         }
 
         [Fact]
@@ -68,15 +116,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 
             Assert.Single(magicNumberMapping.FileMagicNumberMappingTable);
         }
-
-        [Fact]
-        public void GetLongestMagicNumber_NoMagicNumberDefined_Negative()
-        {
-            var magicNumber = new MagicNumberMapping();
-            Assert.Empty(magicNumber.FileMagicNumberMappingTable);
-            Assert.Throws<InvalidConfigurationException>(() => magicNumber.GetLongestMagicNumber());
-        }
-
+        
         [Fact]
         public void GetLongestMagicNumber_Positive()
         {
@@ -92,6 +132,28 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 
             var longestMagicNumber = fileMagicNumberMapping.GetLongestMagicNumber();
             Assert.Equal(longestMagicNumberToAdd, longestMagicNumber);
+        }
+        
+        [Fact]
+        public void AddMagicNumbers_Positive()
+        {
+            var magicNumbers = new byte?[][]{new byte?[]{1, null, 3}, new byte?[]{1, null, 4} } ;
+            var fileType = "test";
+
+            var magicNumberMapping = new MagicNumberMapping();
+            Assert.Empty(magicNumberMapping.FileMagicNumberMappingTable);
+
+            magicNumberMapping.AddMagicNumbers(magicNumbers, fileType);
+
+            Assert.Equal(2, magicNumberMapping.FileMagicNumberMappingTable.Count);
+        }
+
+        [Fact]
+        public void GetLongestMagicNumber_NoMagicNumberDefined_Negative()
+        {
+            var magicNumber = new MagicNumberMapping();
+            Assert.Empty(magicNumber.FileMagicNumberMappingTable);
+            Assert.Throws<InvalidConfigurationException>(() => magicNumber.GetLongestMagicNumber());
         }
     }
 }

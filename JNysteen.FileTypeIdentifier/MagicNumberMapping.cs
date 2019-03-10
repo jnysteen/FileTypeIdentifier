@@ -20,7 +20,7 @@ namespace JNysteen.FileTypeIdentifier
         }
 
         /// <inheritdoc />
-        IEnumerable<(byte?[] magicNumber, string fileType)> IFileMagicNumberMapping.FileMagicNumbers =>
+        IEnumerable<(byte?[] magicNumber, string fileType)> IFileMagicNumberMapping.FileMagicNumbersByLength =>
             FileMagicNumberMappingTable;
 
         /// <inheritdoc />
@@ -39,6 +39,7 @@ namespace JNysteen.FileTypeIdentifier
                 throw new ArgumentException("File type did not contain any characters!", nameof(fileType));
 
             FileMagicNumberMappingTable.Add((magicNumber, fileType));
+            FileMagicNumberMappingTable.Sort((oneMagicNumber, otherMagicNumber) => oneMagicNumber.Item1.Length > otherMagicNumber.Item1.Length ? -1 : 1);
         }
 
         /// <inheritdoc />

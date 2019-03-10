@@ -28,7 +28,7 @@ namespace JNysteen.FileTypeIdentifier
             if (fileContentsContainingHeader == null || fileContentsContainingHeader.Length == 0)
                 return null;
 
-            foreach (var fileMagicNumberAndType in _fileMagicNumberMapping.FileMagicNumbers)
+            foreach (var fileMagicNumberAndType in _fileMagicNumberMapping.FileMagicNumbersByLength)
             {
                 var (magicNumber, fileType) = fileMagicNumberAndType;
 

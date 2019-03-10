@@ -6,7 +6,7 @@
     public interface IFileMagicNumberMatcher
     {
         /// <summary>
-        ///     Returns the file type of the first magic number, that matches the provided file header. If no matches are found, null
+        ///     Returns the file type of the longest magic number, that matches the provided file header. If no matches are found, null
         ///     is returned.
         /// </summary>
         string MatchFileType(byte[] fileContentsContainingHeader);
