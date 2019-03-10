@@ -5,11 +5,7 @@
     <LangVersion>7.3</LangVersion>
     <Title>JNysteen.FileTypeIdentifier</Title>
     <Authors>Jesper Nysteen (code@jnysteen.com)</Authors>
-    <Description>FileTypeIdentifier is a simple component that can match files with a user-configurable collection of file signatures.</Description>
+    <Description>FileTypeIdentifier is a simple component that can identify files types using a user-configurable collection of files' magic numbers.</Description>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="MimeType.cs" />
-    <Compile Remove="MimeTypeMapper.cs" />
-  </ItemGroup>
 </Project>

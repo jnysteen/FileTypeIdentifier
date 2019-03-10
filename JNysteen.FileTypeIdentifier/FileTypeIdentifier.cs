@@ -6,39 +6,39 @@ namespace JNysteen.FileTypeIdentifier
     /// <inheritdoc />
     public class FileTypeIdentifier : IFileTypeIdentifier
     {
-        private readonly IFileSignatureMatcher _fileSignatureMatcher;
+        private readonly IFileMagicNumberMatcher _fileMagicNumberMatcher;
 
         /// <summary>
-        ///     Creates a FileTypeIdentifier that will match file signatures using the provided file signature matcher.
+        ///     Creates a FileTypeIdentifier that will match file magic numbers using the provided magic number matcher.
         /// </summary>
-        internal FileTypeIdentifier(IFileSignatureMatcher fileSignatureMatcher)
+        internal FileTypeIdentifier(IFileMagicNumberMatcher fileMagicNumberMatcher)
         {
-            _fileSignatureMatcher = fileSignatureMatcher;
+            _fileMagicNumberMatcher = fileMagicNumberMatcher;
         }
 
         /// <summary>
-        ///     Creates a FileTypeIdentifier that will match file signatures using the provided file signature mapping and the
-        ///     default signature matcher.
+        ///     Creates a FileTypeIdentifier that will match file magic numbers using the provided magic number mapping and the
+        ///     default magic number matcher.
         /// </summary>
-        public FileTypeIdentifier(IFileSignatureMapping fileSignatureMapping)
+        public FileTypeIdentifier(IFileMagicNumberMapping fileMagicNumberMapping)
         {
-            _fileSignatureMatcher = new FileSignatureMatcher(fileSignatureMapping);
+            _fileMagicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
         }
 
         /// <inheritdoc />
         public string GetFileType(Stream fileStream)
         {
-            var longestFileSignature = _fileSignatureMatcher.GetLongestSignature();
-            var signatureBytes = new byte[longestFileSignature];
-            var numberOfReadBytes = fileStream.Read(signatureBytes, 0, signatureBytes.Length);
+            var longestMagicNumber = _fileMagicNumberMatcher.GetLongestMagicNumber();
+            var magicNumberBytes = new byte[longestMagicNumber];
+            var numberOfReadBytes = fileStream.Read(magicNumberBytes, 0, magicNumberBytes.Length);
 
-            return GetFileType(signatureBytes);
+            return GetFileType(magicNumberBytes);
         }
 
         /// <inheritdoc />
         public string GetFileType(byte[] fileContents)
         {
-            return _fileSignatureMatcher.MatchFileType(fileContents);
+            return _fileMagicNumberMatcher.MatchFileType(fileContents);
         }
     }
 }

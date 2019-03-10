@@ -11,10 +11,10 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         {
             var fileType = "TEST";
 
-            var fileSignatureMappingMock = new Mock<IFileSignatureMatcher>();
-            fileSignatureMappingMock.Setup(matcher => matcher.MatchFileType(It.IsAny<byte[]>())).Returns(fileType);
+            var magicNumberMappingMock = new Mock<IFileMagicNumberMatcher>();
+            magicNumberMappingMock.Setup(matcher => matcher.MatchFileType(It.IsAny<byte[]>())).Returns(fileType);
 
-            var fileTypeIdentifier = new FileTypeIdentifier(fileSignatureMappingMock.Object);
+            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMappingMock.Object);
 
             var identifiedFileType = fileTypeIdentifier.GetFileType(new byte[0]);
             Assert.NotNull(identifiedFileType);
@@ -24,10 +24,10 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         [Fact]
         public void CanGetFileType_MatcherFindsNoMatch_Negative()
         {
-            var fileSignatureMappingMock = new Mock<IFileSignatureMatcher>();
-            fileSignatureMappingMock.Setup(matcher => matcher.MatchFileType(It.IsAny<byte[]>())).Returns<string>(null);
+            var magicNumberMappingMock = new Mock<IFileMagicNumberMatcher>();
+            magicNumberMappingMock.Setup(matcher => matcher.MatchFileType(It.IsAny<byte[]>())).Returns<string>(null);
 
-            var fileTypeIdentifier = new FileTypeIdentifier(fileSignatureMappingMock.Object);
+            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMappingMock.Object);
 
             var identifiedFileType = fileTypeIdentifier.GetFileType(new byte[0]);
             Assert.Null(identifiedFileType);

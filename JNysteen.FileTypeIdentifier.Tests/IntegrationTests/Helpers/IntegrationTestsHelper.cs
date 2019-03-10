@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using JNysteen.FileTypeIdentifier.FileSignatures;
+using JNysteen.FileTypeIdentifier.MagicNumbers;
 
 namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests.Helpers
 {
@@ -37,26 +37,26 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests.Helpers
             return Path.Combine(GetTestDirectory(), "IntegrationTests/TestFiles");
         }
 
-        public static FileSignatureMapping GetAllMappings()
+        public static MagicNumberMapping GetAllMappings()
         {
-            var fileSignatureMapping = new FileSignatureMapping();
+            var magicNumberMapping = new MagicNumberMapping();
 
-            foreach (var signature in ImageSignatures.BMPSignatures)
-                fileSignatureMapping.AddFileSignature(signature, ImageSignatures.BMP);
+            foreach (var magicNumber in ImageMagicNumbers.BMPMagicNumbers)
+                magicNumberMapping.AddMagicNumber(magicNumber, ImageMagicNumbers.BMP);
 
-            foreach (var signature in ImageSignatures.GIFSignatures)
-                fileSignatureMapping.AddFileSignature(signature, ImageSignatures.GIF);
+            foreach (var magicNumber in ImageMagicNumbers.GIFMagicNumbers)
+                magicNumberMapping.AddMagicNumber(magicNumber, ImageMagicNumbers.GIF);
 
-            foreach (var signature in ImageSignatures.JPEGSignatures)
-                fileSignatureMapping.AddFileSignature(signature, ImageSignatures.JPEG);
+            foreach (var magicNumber in ImageMagicNumbers.JPEGMagicNumbers)
+                magicNumberMapping.AddMagicNumber(magicNumber, ImageMagicNumbers.JPEG);
 
-            foreach (var signature in ImageSignatures.PNGSignatures)
-                fileSignatureMapping.AddFileSignature(signature, ImageSignatures.PNG);
+            foreach (var magicNumber in ImageMagicNumbers.PNGMagicNumbers)
+                magicNumberMapping.AddMagicNumber(magicNumber, ImageMagicNumbers.PNG);
 
-            foreach (var signature in DocumentSignatures.PDFSignatures)
-                fileSignatureMapping.AddFileSignature(signature, DocumentSignatures.PDF);
+            foreach (var magicNumber in DocumentMagicNumbers.PDFMagicNumbers)
+                magicNumberMapping.AddMagicNumber(magicNumber, DocumentMagicNumbers.PDF);
 
-            return fileSignatureMapping;
+            return magicNumberMapping;
         }
     }
 }

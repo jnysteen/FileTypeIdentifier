@@ -3,7 +3,7 @@ using System.IO;
 namespace JNysteen.FileTypeIdentifier.Interfaces
 {
     /// <summary>
-    ///     Exposes methods for identifying file types using a file signature matcher.
+    ///     Exposes methods for identifying file types.
     /// </summary>
     public interface IFileTypeIdentifier
     {

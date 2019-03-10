@@ -13,9 +13,9 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         [MemberData(nameof(TestFiles))]
         public void CorrectlyIdentifiesTestFiles(Tuple<string, string> filePathAndActualFileType)
         {
-            var fileSignatureMapping = IntegrationTestsHelper.GetAllMappings();
-            var fileSignatureMatcher = new FileSignatureMatcher(fileSignatureMapping);
-            var fileTypeIdentifier = new FileTypeIdentifier(fileSignatureMatcher);
+            var fileMagicNumberMapping = IntegrationTestsHelper.GetAllMappings();
+            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
+            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMatcher);
 
             var (filePath, actualFileType) = filePathAndActualFileType;
 
@@ -34,15 +34,15 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
             .Select(t => new object[] {new Tuple<string, string>(t.Item1, t.Item2)});
 
         [Fact]
-        public void CanGetFileType_FileContentsAsLongAsSignature_Positive()
+        public void CanGetFileType_FileContentsAsLongAsMagicNumber_Positive()
         {
-            var fileSignatureMapping = new FileSignatureMapping();
-            var fileSignatureMatcher = new FileSignatureMatcher(fileSignatureMapping);
-            var fileTypeIdentifier = new FileTypeIdentifier(fileSignatureMatcher);
+            var fileMagicNumberMapping = new MagicNumberMapping();
+            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
+            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMatcher);
 
-            var fileSignature = new byte?[] {1, 2, 3, 4, 5};
+            var magicNumber = new byte?[] {1, 2, 3, 4, 5};
             var fileType = "TEST";
-            fileSignatureMapping.AddFileSignature(fileSignature, fileType);
+            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
 
             var testFileContents = new byte[] {1, 2, 3, 4, 5};
 
@@ -52,15 +52,15 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         }
 
         [Fact]
-        public void CanGetFileType_FileContentsLongerThanSignature_Positive()
+        public void CanGetFileType_FileContentsLongerThanMagicNumber_Positive()
         {
-            var fileSignatureMapping = new FileSignatureMapping();
-            var fileSignatureMatcher = new FileSignatureMatcher(fileSignatureMapping);
-            var fileTypeIdentifier = new FileTypeIdentifier(fileSignatureMatcher);
+            var fileMagicNumberMapping = new MagicNumberMapping();
+            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
+            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMatcher);
 
-            var fileSignature = new byte?[] {1, 2, 3};
+            var magicNumber = new byte?[] {1, 2, 3};
             var fileType = "TEST";
-            fileSignatureMapping.AddFileSignature(fileSignature, fileType);
+            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
 
             var testFileContents = new byte[] {1, 2, 3, 4, 5};
 
@@ -70,15 +70,15 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         }
 
         [Fact]
-        public void CanGetFileType_SignatureLongerThanInput_Positive()
+        public void CanGetFileType_MagicNumberLongerThanInput_Positive()
         {
-            var fileSignatureMapping = new FileSignatureMapping();
-            var fileSignatureMatcher = new FileSignatureMatcher(fileSignatureMapping);
-            var fileTypeIdentifier = new FileTypeIdentifier(fileSignatureMatcher);
+            var fileMagicNumberMapping = new MagicNumberMapping();
+            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
+            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMatcher);
 
-            var fileSignature = new byte?[] {1, 2, 3, 4, 5};
+            var magicNumber = new byte?[] {1, 2, 3, 4, 5};
             var fileType = "TEST";
-            fileSignatureMapping.AddFileSignature(fileSignature, fileType);
+            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
 
             var testFileContents = new byte[] {1, 2, 3};
 
@@ -87,15 +87,15 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         }
 
         [Fact]
-        public void CanGetFileType_UnknownFileSignature_Positive()
+        public void CanGetFileType_UnknownMagicNumber_Positive()
         {
-            var fileSignatureMapping = new FileSignatureMapping();
-            var fileSignatureMatcher = new FileSignatureMatcher(fileSignatureMapping);
-            var fileTypeIdentifier = new FileTypeIdentifier(fileSignatureMatcher);
+            var fileMagicNumberMapping = new MagicNumberMapping();
+            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
+            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMatcher);
 
-            var fileSignature = new byte?[] {1, 2, 3};
+            var magicNumber = new byte?[] {1, 2, 3};
             var fileType = "TEST";
-            fileSignatureMapping.AddFileSignature(fileSignature, fileType);
+            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
 
             var testFileContents = new byte[] {2, 3, 4, 5};
 
@@ -106,13 +106,13 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         [Fact]
         public void InputHeaderIsNull_Negative()
         {
-            var fileSignatureMapping = new FileSignatureMapping();
-            var fileSignatureMatcher = new FileSignatureMatcher(fileSignatureMapping);
-            var fileTypeIdentifier = new FileTypeIdentifier(fileSignatureMatcher);
+            var fileMagicNumberMapping = new MagicNumberMapping();
+            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
+            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMatcher);
 
-            var fileSignature = new byte?[] {1, 2, 3};
+            var magicNumber = new byte?[] {1, 2, 3};
             var fileType = "TEST";
-            fileSignatureMapping.AddFileSignature(fileSignature, fileType);
+            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
 
             byte[] testFileContents = null;
 

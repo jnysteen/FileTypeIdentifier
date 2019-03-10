@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using JNysteen.FileTypeIdentifier.FileSignatures;
+using JNysteen.FileTypeIdentifier.MagicNumbers;
 
 namespace JNysteen.FileTypeIdentifier.ConsoleApplication
 {
@@ -10,22 +10,22 @@ namespace JNysteen.FileTypeIdentifier.ConsoleApplication
         {
             /***
              *    This simple console application contains an example of how the file type identifier is used.
-             *    A file signature mapping is instantiated and configured to contain the signatures for a PDF file.
+             *    A file magic number mapping is instantiated and configured to contain the magic numbers for a PDF file.
              *    A file type identifier is instantiated with this mapping, enabling it to recognize PDF files.
              *
              *    The input loop asks the user for a file path and, using the file type identifier, tells the user
              *    whether the inputted file was a PDF or not. 
              */
 
-            // Instantiate a mapping of the file signatures that should be recognized
-            var fileSignatureMapping = new FileSignatureMapping();
+            // Instantiate a mapping of the file magic numbers that should be recognized
+            var fileMagicNumberMapping = new MagicNumberMapping();
 
-            // Add the file signatures for the PDF file type
-            fileSignatureMapping.AddFileSignatures(DocumentSignatures.PDFSignatures, DocumentSignatures.PDF);
-            // If more types of files should be recognized, they can be added to the file signature mapping here
+            // Add the file magic numbers for the PDF file type
+            fileMagicNumberMapping.AddMagicNumbers(DocumentMagicNumbers.PDFMagicNumbers, DocumentMagicNumbers.PDF);
+            // If more types of files should be recognized, they can be added to the file magic number mapping here
 
-            // Instantiate a new file type identifier with the configure file signature mapping
-            var fileTypeIdentifier = new FileTypeIdentifier(fileSignatureMapping);
+            // Instantiate a new file type identifier with the configure file magic number mapping
+            var fileTypeIdentifier = new FileTypeIdentifier(fileMagicNumberMapping);
 
             while (true)
             {
