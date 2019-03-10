@@ -4,7 +4,7 @@ param(
 )
 
 Write-Output "Creating NuGet package..."
-$nugetPackOuput = nuget pack .\JNysteen.FileTypeIdentifier\JNysteen.FileTypeIdentifier.csproj -Build -ForceEnglishOutput -Properties Configuration=Release
+$nugetPackOuput = dotnet pack .\JNysteen.FileTypeIdentifier\JNysteen.FileTypeIdentifier.csproj --configuration=Release --output=createdNugetPackages
 
 if($LASTEXITCODE -eq 0)
 {
@@ -19,7 +19,7 @@ else
 # Retrieve the package location from the NuGet pack output
 $nugetPackOutputLines = ($nugetPackOuput -split '\n')
 $lastNugetPackLine = $nugetPackOutputLines[$nugetPackOutputLines.Length-1];
-$lastNugetPackLine -match "'(?<nugetPackage>.*)'"
+$lastNugetPackLine -match ".*Successfully created package '(?<nugetPackage>.*)'"
 $createdPackage = $Matches.nugetPackage
 
 Write-Output "Created package: $createdPackage"
@@ -39,7 +39,7 @@ while($confirmation -ne "y")
 $createdPackage
 
 Write-Output "Pushing package to $nugetEndpoint!"
-nuget push $createdPackage $nugetApiKey -Source $nugetEndpoint
+dotnet nuget push $createdPackage -k $nugetApiKey -s $nugetEndpoint
 
 if($LASTEXITCODE -eq 0)
 {
