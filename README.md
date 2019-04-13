@@ -13,7 +13,7 @@ If you feel like the set of preconfigured magic numbers is too limited, you are 
 * Look at the header of a file and tell whether the file's magic number matches a known type or not.
 
 **What the `FileTypeIdentifier` *cannot* do:**
-* Guarantee that the file is actually of the type, that its magic number indicate.
+* Guarantee that the file is actually of the type indicated by its magic number.
 * Ensure that the file is not corrupt.
 
 
