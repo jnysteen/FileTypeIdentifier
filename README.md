@@ -1,6 +1,6 @@
 # FileTypeIdentifier
 
-`FileTypeIdentifier` is a simple component that can identify files types using a user-configurable collection of files' magic numbers..
+`FileTypeIdentifier` is a simple component that can identify files types using a user-configurable collection of files' magic numbers.
 
 This component is not designed with any black-magic, super-efficient file type checking tricks in mind - it identifies a file by matching the file's [magic number](https://en.wikipedia.org/wiki/File_format#Magic_number) with a user-configured collection of magic numbers.
 
@@ -19,7 +19,7 @@ If you feel like the set of preconfigured magic numbers is too limited, you are 
 
 ## Use cases
 
-I will personally be using this project when...:
+I am personally using this project for...:
 
 * ... quickly determining whether a file is a type of file my application can handle or not.
 * ... determining the type of files received in web services, where the extension of the file might not match the actual file type.
