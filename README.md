@@ -4,10 +4,10 @@
 
 This component is not designed with any black-magic, super-efficient file type checking tricks in mind - it identifies a file by matching the file's [magic number](https://en.wikipedia.org/wiki/File_format#Magic_number) with a user-configured collection of magic numbers.
 
-Found inside this component is a [very limited set of pairs of magic numbers and file names](./JNysteen.FileTypeIdentifier/MagicNumbers) (based on my current needs use cases for identifying files). 
-If you feel like the set of preconfigured magic numbers is too limited, you are more than welcome to contact me with suggestions.
+Found inside this repo is a [very limited set of pairs of magic numbers and file names](./JNysteen.FileTypeIdentifier/MagicNumbers) (based on my current needs use cases for identifying files). 
+If you feel like the set of preconfigured magic numbers is too limited, you are more than welcome to create a PR or contact me with suggestions.
 
-## Features - spelled out
+## Features
 
 **What the `FileTypeIdentifier` can do:**
 * Look at the header of a file and tell whether the file's magic number matches a known type or not.
@@ -15,7 +15,6 @@ If you feel like the set of preconfigured magic numbers is too limited, you are 
 **What the `FileTypeIdentifier` *cannot* do:**
 * Guarantee that the file is actually of the type indicated by its magic number.
 * Ensure that the file is not corrupt.
-
 
 ## Use cases
 
