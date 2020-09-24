@@ -1,10 +1,11 @@
-using Xunit;
+using FluentAssertions;
+using NUnit.Framework;
 
 namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
 {
     public class FileTypeIdentification_ByteArrayAsInput_IT
     {
-        [Fact]
+        [Theory]
         public void InputHeaderIsNull_Negative()
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
@@ -18,7 +19,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
             byte[] testFileContents = null;
 
             var identifiedFileType = fileTypeIdentifier.GetFileType(testFileContents);
-            Assert.Null(identifiedFileType);
+            identifiedFileType.Should().BeNull("no file type should have been identified");
         }
     }
 }

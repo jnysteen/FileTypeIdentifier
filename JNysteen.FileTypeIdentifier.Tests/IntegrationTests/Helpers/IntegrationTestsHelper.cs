@@ -12,7 +12,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests.Helpers
         /// <summary>
         ///     Gets the path and extension of every test file in the test files directory.
         /// </summary>
-        public static IEnumerable<(string, string)> GetTestFiles()
+        public static IEnumerable<(string filePath, string fileExtension)> GetTestFiles()
         {
             var testFilesDirectory = GetTestFilesDirectory();
 

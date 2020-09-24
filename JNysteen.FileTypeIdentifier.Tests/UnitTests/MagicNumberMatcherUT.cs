@@ -1,10 +1,11 @@
-using Xunit;
+using FluentAssertions;
+using NUnit.Framework;
 
 namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 {
     public class MagicNumberMatcherUT
     {
-        [Fact]
+        [Theory]
         public void CanMatchFileType_FileContentsAsLongAsMagicNumber_Positive()
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
@@ -17,11 +18,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var testFileContents = new byte[] {1, 2, 3, 4, 5};
 
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            Assert.NotNull(identifiedFileType);
-            Assert.Equal(fileType, identifiedFileType);
+            identifiedFileType.Should().NotBeNull("a file type should have been identified");
+            identifiedFileType.Should().Be(fileType);
         }
 
-        [Fact]
+        [Theory]
         public void CanMatchFileType_FileContentsLongerThanMagicNumber_Positive()
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
@@ -34,11 +35,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var testFileContents = new byte[] {1, 2, 3, 4, 5};
 
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            Assert.NotNull(identifiedFileType);
-            Assert.Equal(fileType, identifiedFileType);
+            identifiedFileType.Should().NotBeNull("a file type should have been identified");
+            identifiedFileType.Should().Be(fileType);
         }
         
-        [Fact]
+        [Theory]
         public void CanMatchFileType_ReturnsLongestMatch_Positive()
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
@@ -61,11 +62,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var testFileContents = new byte[] {1, 2, 3, 4, 5, 6, 7};
 
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            Assert.NotNull(identifiedFileType);
-            Assert.Equal(expectedMatchedFileType, identifiedFileType);
+            identifiedFileType.Should().NotBeNull("a file type should have been identified");
+            identifiedFileType.Should().Be(expectedMatchedFileType);
         }
         
-        [Fact]
+        [Theory]
         public void CanMatchFileType_MagicNumberWithWildcards_Positive()
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
@@ -78,11 +79,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var testFileContents = new byte[] {1, 2, 3, 4, 5};
 
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            Assert.NotNull(identifiedFileType);
-            Assert.Equal(fileType, identifiedFileType);
+            identifiedFileType.Should().NotBeNull("a file type should have been identified");
+            identifiedFileType.Should().Be(fileType);
         }
 
-        [Fact]
+        [Theory]
         public void CanMatchFileType_MagicNumberLongerThanInput_Positive()
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
@@ -95,10 +96,10 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var testFileContents = new byte[] {1, 2, 3};
 
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            Assert.Null(identifiedFileType);
+            identifiedFileType.Should().BeNull("the file's contents was shorter than any configured magic number");
         }
 
-        [Fact]
+        [Theory]
         public void CanMatchFileType_UnknownMagicNumber_Positive()
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
@@ -111,10 +112,10 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var testFileContents = new byte[] {2, 3, 4, 5};
 
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            Assert.Null(identifiedFileType);
+            identifiedFileType.Should().BeNull("no configured magic number matches file's header");
         }
 
-        [Fact]
+        [Theory]
         public void InputHeaderIsNull_Negative()
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
@@ -127,7 +128,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             byte[] testFileContents = null;
 
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            Assert.Null(identifiedFileType);
+            identifiedFileType.Should().BeNull("the input file's header is null");
         }
     }
 }

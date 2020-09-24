@@ -1,12 +1,13 @@
-﻿using JNysteen.FileTypeIdentifier.Interfaces;
+﻿using FluentAssertions;
+using JNysteen.FileTypeIdentifier.Interfaces;
 using Moq;
-using Xunit;
+using NUnit.Framework;
 
 namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 {
     public class FileTypeIdentificationUT
     {
-        [Fact]
+        [Theory]
         public void CanGetFileType_MatcherFindsMatch_Positive()
         {
             var fileType = "TEST";
@@ -17,11 +18,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMappingMock.Object);
 
             var identifiedFileType = fileTypeIdentifier.GetFileType(new byte[0]);
-            Assert.NotNull(identifiedFileType);
-            Assert.Equal(fileType, identifiedFileType);
+            identifiedFileType.Should().NotBeNull("a file type should have been identified");
+            identifiedFileType.Should().Be(fileType);
         }
 
-        [Fact]
+        [Theory]
         public void CanGetFileType_MatcherFindsNoMatch_Negative()
         {
             var magicNumberMappingMock = new Mock<IFileMagicNumberMatcher>();
@@ -30,7 +31,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMappingMock.Object);
 
             var identifiedFileType = fileTypeIdentifier.GetFileType(new byte[0]);
-            Assert.Null(identifiedFileType);
+            identifiedFileType.Should().NotBeNull();
         }
     }
 }
