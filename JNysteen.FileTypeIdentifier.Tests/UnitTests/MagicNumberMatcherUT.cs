@@ -1,134 +1,120 @@
+using System.Collections;
 using FluentAssertions;
+using JNysteen.FileTypeIdentifier.Interfaces;
 using NUnit.Framework;
 
 namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 {
     public class MagicNumberMatcherUT
     {
-        [Theory]
-        public void CanMatchFileType_FileContentsAsLongAsMagicNumber_Positive()
+        [TestCaseSource(nameof(MagicNumberMatchingShouldMatchTestCases))]
+        public void CanMatchFileType(IFileMagicNumberMapping fileMagicNumberMapping, byte[] testFileContents, string actualFileType)
         {
-            var fileMagicNumberMapping = new MagicNumberMapping();
             var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
-
-            var magicNumber = new byte?[] {1, 2, 3, 4, 5};
-            var fileType = "TEST";
-            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
-
-            var testFileContents = new byte[] {1, 2, 3, 4, 5};
-
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
             identifiedFileType.Should().NotBeNull("a file type should have been identified");
-            identifiedFileType.Should().Be(fileType);
-        }
-
-        [Theory]
-        public void CanMatchFileType_FileContentsLongerThanMagicNumber_Positive()
-        {
-            var fileMagicNumberMapping = new MagicNumberMapping();
-            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
-
-            var magicNumber = new byte?[] {1, 2, 3};
-            var fileType = "TEST";
-            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
-
-            var testFileContents = new byte[] {1, 2, 3, 4, 5};
-
-            var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            identifiedFileType.Should().NotBeNull("a file type should have been identified");
-            identifiedFileType.Should().Be(fileType);
+            identifiedFileType.Should().Be(actualFileType);
         }
         
-        [Theory]
-        public void CanMatchFileType_ReturnsLongestMatch_Positive()
+        [TestCaseSource(nameof(MagicNumberMatchingShouldNotMatchingTestCases))]
+        public void CanAvoidMatchingFileType(IFileMagicNumberMapping fileMagicNumberMapping, byte[] testFileContents)
         {
-            var fileMagicNumberMapping = new MagicNumberMapping();
             var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
-
-            var magicNumber1 = new byte?[] {1, 2, 3};
-            var fileType1 = "TEST";
-            fileMagicNumberMapping.AddMagicNumber(magicNumber1, fileType1);
-            
-            var magicNumber2 = new byte?[] {1, 2, 3, 4, 5};
-            var fileType2 = fileType1 + "-other-file-type";
-            fileMagicNumberMapping.AddMagicNumber(magicNumber2, fileType2);
-            
-            var magicNumberNotMatching = new byte?[] {1, 2, 3, 4, 5, 8};
-            var fileTypeNotMatching = fileType2 + "-completely-other-type";
-            fileMagicNumberMapping.AddMagicNumber(magicNumberNotMatching, fileTypeNotMatching);
-
-            var expectedMatchedFileType = fileType2;
-
-            var testFileContents = new byte[] {1, 2, 3, 4, 5, 6, 7};
-
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            identifiedFileType.Should().NotBeNull("a file type should have been identified");
-            identifiedFileType.Should().Be(expectedMatchedFileType);
+            identifiedFileType.Should().BeNull("no file type should have been identified");
+        }
+
+        public static IEnumerable MagicNumberMatchingShouldMatchTestCases
+        {
+            get
+            {
+                yield return new TestCaseData(
+                    new object[]
+                    {
+                        CreateMappingWithSingleMagicNumber(new byte?[] {1, 2, 3, 4, 5}, "TEST") ,
+                        new byte[] {1, 2, 3, 4, 5},
+                        "TEST"
+                    }
+                    ).SetName("File contents is as long as magic number");
+                
+                yield return new TestCaseData(
+                    new object[]
+                    {
+                        CreateMappingWithSingleMagicNumber(new byte?[] {1, 2, 3}, "TEST") ,
+                        new byte[] {1, 2, 3, 4, 5},
+                        "TEST"
+                    }
+                ).SetName("File contents is longer than the magic number");
+
+                yield return new TestCaseData(
+                    new object[]
+                    {
+                        CreateMappingWithSingleMagicNumber(new byte?[] {1, 2, null, null, 5}, "TEST") ,
+                        new byte[] {1, 2, 3, 4, 5},
+                        "TEST"
+                    }
+                ).SetName("Magic number with wild cards");
+
+                var multipleMappings = new MagicNumberMapping();
+                
+                var magicNumber1 = new byte?[] {1, 2, 3};
+                var fileType1 = "TEST";
+                multipleMappings.AddMagicNumber(magicNumber1, fileType1);
+            
+                var magicNumber2 = new byte?[] {1, 2, 3, 4, 5};
+                var fileType2 = fileType1 + "-other-file-type";
+                multipleMappings.AddMagicNumber(magicNumber2, fileType2);
+            
+                var magicNumberNotMatching = new byte?[] {1, 2, 3, 4, 5, 8};
+                var fileTypeNotMatching = fileType2 + "-completely-other-type";
+                multipleMappings.AddMagicNumber(magicNumberNotMatching, fileTypeNotMatching);
+                
+                yield return new TestCaseData(
+                    new object[]
+                    {
+                        multipleMappings,
+                        new byte[] {1, 2, 3, 4, 5, 6, 7},
+                        fileType2
+                    }
+                    ).SetName("Multiple matching mappings, longest match is chosen");
+            }
         }
         
-        [Theory]
-        public void CanMatchFileType_MagicNumberWithWildcards_Positive()
+        public static IEnumerable MagicNumberMatchingShouldNotMatchingTestCases
         {
-            var fileMagicNumberMapping = new MagicNumberMapping();
-            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
-
-            var magicNumber = new byte?[] {1, 2, null, null, 5};
-            var fileType = "TEST";
-            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
-
-            var testFileContents = new byte[] {1, 2, 3, 4, 5};
-
-            var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            identifiedFileType.Should().NotBeNull("a file type should have been identified");
-            identifiedFileType.Should().Be(fileType);
+            get
+            {
+                yield return new TestCaseData(
+                    new object[]
+                    {
+                        CreateMappingWithSingleMagicNumber(new byte?[] {1, 2, 3, 4, 5}, "TEST") ,
+                        new byte[] {1, 2, 3}
+                    }
+                ).SetName("File contents is shorter than any configured magic number");
+                
+                yield return new TestCaseData(
+                    new object[]
+                    {
+                        CreateMappingWithSingleMagicNumber(new byte?[] {1, 2, 3}, "TEST") ,
+                        new byte[] {2, 3, 4, 5}
+                    }
+                ).SetName("No configured magic number matches file's header");
+                
+                yield return new TestCaseData(
+                    new object[]
+                    {
+                        CreateMappingWithSingleMagicNumber(new byte?[] {1, 2, 3}, "TEST") ,
+                        null
+                    }
+                ).SetName("The input file contents is null");
+            }
         }
 
-        [Theory]
-        public void CanMatchFileType_MagicNumberLongerThanInput_Positive()
+        public static MagicNumberMapping CreateMappingWithSingleMagicNumber(byte?[] magicNumber, string fileType)
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
-            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
-
-            var magicNumber = new byte?[] {1, 2, 3, 4, 5};
-            var fileType = "TEST";
             fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
-
-            var testFileContents = new byte[] {1, 2, 3};
-
-            var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            identifiedFileType.Should().BeNull("the file's contents was shorter than any configured magic number");
-        }
-
-        [Theory]
-        public void CanMatchFileType_UnknownMagicNumber_Positive()
-        {
-            var fileMagicNumberMapping = new MagicNumberMapping();
-            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
-
-            var magicNumber = new byte?[] {1, 2, 3};
-            var fileType = "TEST";
-            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
-
-            var testFileContents = new byte[] {2, 3, 4, 5};
-
-            var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            identifiedFileType.Should().BeNull("no configured magic number matches file's header");
-        }
-
-        [Theory]
-        public void InputHeaderIsNull_Negative()
-        {
-            var fileMagicNumberMapping = new MagicNumberMapping();
-            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
-
-            var magicNumber = new byte?[] {1, 2, 3};
-            var fileType = "TEST";
-            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
-
-            byte[] testFileContents = null;
-
-            var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
-            identifiedFileType.Should().BeNull("the input file's header is null");
+            return fileMagicNumberMapping;
         }
     }
 }
