@@ -31,7 +31,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMappingMock.Object);
 
             var identifiedFileType = fileTypeIdentifier.GetFileType(new byte[0]);
-            identifiedFileType.Should().NotBeNull();
+            identifiedFileType.Should().BeNull("no mapping matches the input file");
         }
     }
 }
