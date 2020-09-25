@@ -1,7 +1,7 @@
 ﻿namespace JNysteen.FileTypeIdentifier.Interfaces
 {
     /// <summary>
-    ///     Contains the logic for matching file contents with a collection of known magic numbers
+    ///     Matches file contents with a collection of known magic numbers
     /// </summary>
     public interface IFileMagicNumberMatcher
     {
@@ -12,7 +12,7 @@
         string MatchFileType(byte[] fileContentsContainingHeader);
 
         /// <summary>
-        ///     Retrieves the longest magic number found in the matcher's magic number mapping .
+        ///     Retrieves the longest magic number found in the matcher's magic number mapping.
         /// </summary>
         int GetLongestMagicNumber();
     }

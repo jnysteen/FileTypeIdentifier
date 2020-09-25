@@ -5,7 +5,7 @@
     <LangVersion>7.3</LangVersion>
     <Title>JNysteen.FileTypeIdentifier</Title>
     <Authors>Jesper Nysteen (code@jnysteen.com)</Authors>
-    <Description>FileTypeIdentifier is a simple component that can identify files types using a user-configurable collection of files' magic numbers.</Description>
+    <Description>A library for identifying file types from a user-configurable collection of files' magic numbers.</Description>
     <Copyright>Jesper Nysteen</Copyright>
     <PackageProjectUrl>https://github.com/jnysteen/FileTypeIdentifier</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/jnysteen/FileTypeIdentifier/blob/master/LICENSE.TXT</PackageLicenseUrl>
@@ -13,7 +13,17 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>magicnumber magic filetype file</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageVersion>1.0.1</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
+    <IsPackable>true</IsPackable>
+    <WarningsAsErrors>1591</WarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\JNysteen.FileTypeIdentifier.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\JNysteen.FileTypeIdentifier.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

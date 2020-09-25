@@ -9,7 +9,7 @@ namespace JNysteen.FileTypeIdentifier
     /// <inheritdoc />
     public class MagicNumberMapping : IFileMagicNumberMapping
     {
-        internal readonly List<(byte?[], string)> FileMagicNumberMappingTable;
+        internal readonly List<(byte?[] magicNumber, string fileType)> FileMagicNumberMappingTable;
 
         /// <summary>
         ///     Creates a new, empty FileMagicNumberMapping
@@ -39,7 +39,7 @@ namespace JNysteen.FileTypeIdentifier
                 throw new ArgumentException("File type did not contain any characters!", nameof(fileType));
 
             FileMagicNumberMappingTable.Add((magicNumber, fileType));
-            FileMagicNumberMappingTable.Sort((oneMagicNumber, otherMagicNumber) => oneMagicNumber.Item1.Length > otherMagicNumber.Item1.Length ? -1 : 1);
+            FileMagicNumberMappingTable.Sort((oneMagicNumber, otherMagicNumber) => oneMagicNumber.magicNumber.Length > otherMagicNumber.magicNumber.Length ? -1 : 1);
         }
 
         /// <inheritdoc />
@@ -49,13 +49,17 @@ namespace JNysteen.FileTypeIdentifier
                 AddMagicNumber(magicNumber, fileType);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Fetches the longest magic number found in the configuration
+        /// </summary>
+        /// <returns>The longest magic number found in the configuration</returns>
+        /// <exception cref="InvalidConfigurationException">Thrown if no magic numbers are contained in the mapping table</exception>
         public int GetLongestMagicNumber()
         {
             if (!FileMagicNumberMappingTable.Any())
                 throw new InvalidConfigurationException("The mapping does not contain any magic numbers!");
 
-            return FileMagicNumberMappingTable.Max(t => t.Item1.Length);
+            return FileMagicNumberMappingTable.Max(t => t.magicNumber.Length);
         }
     }
 }

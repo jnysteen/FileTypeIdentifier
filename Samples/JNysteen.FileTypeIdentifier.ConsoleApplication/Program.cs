@@ -54,7 +54,7 @@ namespace JNysteen.FileTypeIdentifier.ConsoleApplication
 
                 // Now, if the provided file is a PDF, it will be recognized by the file type identifier!
                 if (identifiedFileType != null)
-                    Console.WriteLine($"The type of this file is '{identifiedFileType}'");
+                    Console.WriteLine($"File type recognized! The type of this file is '{identifiedFileType}'");
                 // If the file is not a PDF, the type is unknown to the identifier
                 else
                     Console.WriteLine("The file type identifier was not configured to recognize this type of file!");

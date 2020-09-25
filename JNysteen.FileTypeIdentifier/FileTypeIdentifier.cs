@@ -43,19 +43,13 @@ namespace JNysteen.FileTypeIdentifier
             return _fileMagicNumberMatcher.MatchFileType(fileContents);
         }
 
+        /// <inheritdoc />
         public string GetFileType(IEnumerable<byte> fileContents)
         {
             var longestMagicNumber = _fileMagicNumberMatcher.GetLongestMagicNumber();
             var fileHeader = fileContents.Take(longestMagicNumber).ToArray();
             
             return GetFileType(fileHeader);
-        }
-
-        /// <inheritdoc />
-        public string GetFileType(string filePath)
-        {
-            using (var fileStream = File.OpenRead(filePath))
-                return GetFileType(fileStream);
         }
     }
 }
