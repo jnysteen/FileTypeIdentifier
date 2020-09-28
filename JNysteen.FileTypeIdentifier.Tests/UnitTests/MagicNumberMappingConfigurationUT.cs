@@ -13,12 +13,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         public void AddMagicNumber_Positive()
         {
             // Arrange
-            var magicNumber = ValidMagicNumber;
-            var fileType = "test";
+            var magicNumberDefinition = new FileMagicNumberDefinition(ValidMagicNumber, "test");
 
             // Act
             var magicNumberMapping = new MagicNumberMapping();
-            magicNumberMapping.AddMagicNumber(magicNumber, fileType);
+            magicNumberMapping.AddMagicNumberDefinition(magicNumberDefinition);
 
             // Assert
             magicNumberMapping.FileMagicNumberMappingTable.Should().HaveCount(1, "a mapping should have been added");
@@ -30,10 +29,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             // Arrange
             var magicNumbers = new[] {new byte?[]{1, null, 3}, new byte?[]{1, null, 4} } ;
             var fileType = "test";
+            var magicNumberDefinition = new FileMagicNumberDefinition(magicNumbers, "test");
 
             // Act
             var magicNumberMapping = new MagicNumberMapping();
-            magicNumberMapping.AddMagicNumbers(magicNumbers, fileType);
+            magicNumberMapping.AddMagicNumberDefinition(magicNumberDefinition);
 
             // Assert
             magicNumberMapping.FileMagicNumberMappingTable.Should().HaveCount(2, "two mappings should have been added");
@@ -50,7 +50,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             {
                 var magicNumber = Enumerable.Repeat(new byte?(1), i).ToArray();
                 var type = i.ToString();
-                fileMagicNumberMapping.AddMagicNumber(magicNumber, type);
+                fileMagicNumberMapping.AddMagicNumberDefinition(magicNumber, type);
             }
 
             // Act
@@ -82,7 +82,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             magicNumberMapping.FileMagicNumberMappingTable.Should().BeEmpty("there should not be any existing mappings");
             
             // Act
-            Action act = () => magicNumberMapping.AddMagicNumber(magicNumber, fileType);
+            Action act = () => magicNumberMapping.AddMagicNumberDefinition(magicNumber, fileType);
 
             // Assert
             act.Should().Throw<ArgumentException>("the input is bad and should provoke an exception");

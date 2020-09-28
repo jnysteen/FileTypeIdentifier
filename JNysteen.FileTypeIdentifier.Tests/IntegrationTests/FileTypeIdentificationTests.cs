@@ -16,13 +16,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         [Theory]
         public void InputHeaderIsNull_Negative()
         {
-            var fileMagicNumberMapping = new MagicNumberMapping();
-            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
-            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMatcher);
+            var fileTypeIdentifier = new FileTypeIdentifier();
 
             var magicNumber = new byte?[] {1, 2, 3};
             var fileType = "TEST";
-            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
+            fileTypeIdentifier.AddMagicNumber(magicNumber, fileType);
 
             byte[] testFileContents = null;
 
@@ -68,8 +66,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         private static FileTypeIdentifier CreateFileTypeIdentifier()
         {
             var fileMagicNumberMapping = IntegrationTestsHelper.GetAllMappings();
-            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
-            var fileTypeIdentifier = new FileTypeIdentifier(magicNumberMatcher);
+            var fileTypeIdentifier = new FileTypeIdentifier(fileMagicNumberMapping);
             return fileTypeIdentifier;
         }
         

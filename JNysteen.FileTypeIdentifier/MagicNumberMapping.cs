@@ -1,52 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JNysteen.FileTypeIdentifier.Exceptions;
-using JNysteen.FileTypeIdentifier.Interfaces;
 
 namespace JNysteen.FileTypeIdentifier
 {
-    /// <inheritdoc />
-    public class MagicNumberMapping : IFileMagicNumberMapping
+    internal class MagicNumberMapping
     {
-        internal readonly List<(byte?[] magicNumber, string fileType)> FileMagicNumberMappingTable;
+        internal readonly List<FileMagicNumberDefinition> FileMagicNumberMappingTable;
 
         /// <summary>
         ///     Creates a new, empty FileMagicNumberMapping
         /// </summary>
         public MagicNumberMapping()
         {
-            FileMagicNumberMappingTable = new List<(byte?[], string)>();
+            FileMagicNumberMappingTable = new List<FileMagicNumberDefinition>();
         }
 
-        /// <inheritdoc />
-        IEnumerable<(byte?[] magicNumber, string fileType)> IFileMagicNumberMapping.FileMagicNumbersByLength =>
-            FileMagicNumberMappingTable;
-
-        /// <inheritdoc />
-        public void AddMagicNumber(byte?[] magicNumber, string fileType)
+        public void AddMagicNumberDefinition(FileMagicNumberDefinition fileMagicNumberDefinition)
         {
-            if (magicNumber == null)
-                throw new ArgumentNullException(nameof(magicNumber));
-
-            if (magicNumber.Length == 0)
-                throw new ArgumentException("Magic number did not contain any bytes!", nameof(magicNumber));
-
-            if (fileType == null)
-                throw new ArgumentNullException(nameof(fileType));
-
-            if (string.IsNullOrWhiteSpace(fileType))
-                throw new ArgumentException("File type did not contain any characters!", nameof(fileType));
-
-            FileMagicNumberMappingTable.Add((magicNumber, fileType));
-            FileMagicNumberMappingTable.Sort((oneMagicNumber, otherMagicNumber) => oneMagicNumber.magicNumber.Length > otherMagicNumber.magicNumber.Length ? -1 : 1);
-        }
-
-        /// <inheritdoc />
-        public void AddMagicNumbers(IEnumerable<byte?[]> magicNumbers, string fileType)
-        {
-            foreach (var magicNumber in magicNumbers)
-                AddMagicNumber(magicNumber, fileType);
+            FileMagicNumberMappingTable.Add(fileMagicNumberDefinition);
+            FileMagicNumberMappingTable.Sort((oneMagicNumber, otherMagicNumber) => oneMagicNumber.LongestMagicNumber > otherMagicNumber.LongestMagicNumber ? -1 : 1);
         }
 
         /// <summary>
@@ -59,7 +32,7 @@ namespace JNysteen.FileTypeIdentifier
             if (!FileMagicNumberMappingTable.Any())
                 throw new InvalidConfigurationException("The mapping does not contain any magic numbers!");
 
-            return FileMagicNumberMappingTable.Max(t => t.magicNumber.Length);
+            return FileMagicNumberMappingTable.Max(t => t.LongestMagicNumber);
         }
     }
 }

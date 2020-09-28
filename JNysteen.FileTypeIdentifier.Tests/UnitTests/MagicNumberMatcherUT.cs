@@ -59,15 +59,15 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
                 
                 var magicNumber1 = new byte?[] {1, 2, 3};
                 var fileType1 = "TEST";
-                multipleMappings.AddMagicNumber(magicNumber1, fileType1);
+                multipleMappings.AddMagicNumberDefinition(magicNumber1, fileType1);
             
                 var magicNumber2 = new byte?[] {1, 2, 3, 4, 5};
                 var fileType2 = fileType1 + "-other-file-type";
-                multipleMappings.AddMagicNumber(magicNumber2, fileType2);
+                multipleMappings.AddMagicNumberDefinition(magicNumber2, fileType2);
             
                 var magicNumberNotMatching = new byte?[] {1, 2, 3, 4, 5, 8};
                 var fileTypeNotMatching = fileType2 + "-completely-other-type";
-                multipleMappings.AddMagicNumber(magicNumberNotMatching, fileTypeNotMatching);
+                multipleMappings.AddMagicNumberDefinition(magicNumberNotMatching, fileTypeNotMatching);
                 
                 yield return new TestCaseData(
                     new object[]
@@ -113,7 +113,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         public static MagicNumberMapping CreateMappingWithSingleMagicNumber(byte?[] magicNumber, string fileType)
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
-            fileMagicNumberMapping.AddMagicNumber(magicNumber, fileType);
+            fileMagicNumberMapping.AddMagicNumberDefinition(magicNumber, fileType);
             return fileMagicNumberMapping;
         }
     }

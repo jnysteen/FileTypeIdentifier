@@ -7,7 +7,7 @@ using JNysteen.FileTypeIdentifier.MagicNumbers;
 
 namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests.Helpers
 {
-    public static class IntegrationTestsHelper
+    internal static class IntegrationTestsHelper
     {
         /// <summary>
         ///     Gets the path and extension of every test file in the test files directory.
@@ -42,20 +42,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests.Helpers
         {
             var magicNumberMapping = new MagicNumberMapping();
 
-            foreach (var magicNumber in ImageMagicNumbers.BMPMagicNumbers)
-                magicNumberMapping.AddMagicNumber(magicNumber, ImageMagicNumbers.BMP);
-
-            foreach (var magicNumber in ImageMagicNumbers.GIFMagicNumbers)
-                magicNumberMapping.AddMagicNumber(magicNumber, ImageMagicNumbers.GIF);
-
-            foreach (var magicNumber in ImageMagicNumbers.JPEGMagicNumbers)
-                magicNumberMapping.AddMagicNumber(magicNumber, ImageMagicNumbers.JPEG);
-
-            foreach (var magicNumber in ImageMagicNumbers.PNGMagicNumbers)
-                magicNumberMapping.AddMagicNumber(magicNumber, ImageMagicNumbers.PNG);
-
-            foreach (var magicNumber in DocumentMagicNumbers.PDFMagicNumbers)
-                magicNumberMapping.AddMagicNumber(magicNumber, DocumentMagicNumbers.PDF);
+            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(ImageMagicNumbers.BMPMagicNumbers, ImageMagicNumbers.BMP));
+            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(ImageMagicNumbers.GIFMagicNumbers, ImageMagicNumbers.GIF));
+            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(ImageMagicNumbers.JPEGMagicNumbers, ImageMagicNumbers.JPEG));
+            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(ImageMagicNumbers.PNGMagicNumbers, ImageMagicNumbers.PNG));
+            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(DocumentMagicNumbers.PDFMagicNumbers, DocumentMagicNumbers.PDF));
 
             return magicNumberMapping;
         }

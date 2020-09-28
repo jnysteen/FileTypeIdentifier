@@ -10,22 +10,17 @@ namespace JNysteen.FileTypeIdentifier.ConsoleApplication
         {
             /***
              *    This simple console application contains an example of how the file type identifier is used.
-             *    A file magic number mapping is instantiated and configured to contain the magic numbers for a PDF file.
-             *    A file type identifier is instantiated with this mapping, enabling it to recognize PDF files.
+             *    A file type identifier instantiated and configured to contain the magic numbers for a PDF file.
              *
              *    The input loop asks the user for a file path and, using the file type identifier, tells the user
              *    whether the provided file was a PDF or not. 
              */
-
-            // Instantiate a mapping of the file magic numbers that should be recognized
-            var fileMagicNumberMapping = new MagicNumberMapping();
-
+            
+            // Instantiate a new file type identifier 
+            var fileTypeIdentifier = new FileTypeIdentifier();
             // Add the file magic numbers for the PDF file type
-            fileMagicNumberMapping.AddMagicNumbers(DocumentMagicNumbers.PDFMagicNumbers, DocumentMagicNumbers.PDF);
             // If more types of files should be recognized, they can be added to the file magic number mapping here
-
-            // Instantiate a new file type identifier with the configure file magic number mapping
-            var fileTypeIdentifier = new FileTypeIdentifier(fileMagicNumberMapping);
+            fileTypeIdentifier.AddMagicNumbers(DocumentMagicNumbers.PDFMagicNumbers, DocumentMagicNumbers.PDF);
 
             while (true)
             {

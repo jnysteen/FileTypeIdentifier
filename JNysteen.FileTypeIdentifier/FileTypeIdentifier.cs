@@ -8,29 +8,24 @@ namespace JNysteen.FileTypeIdentifier
     /// <inheritdoc />
     public class FileTypeIdentifier : IFileTypeIdentifier
     {
-        private readonly IFileMagicNumberMatcher _fileMagicNumberMatcher;
+        private readonly MagicNumberMapping _magicNumberMapping;
 
-        /// <summary>
-        ///     Creates a FileTypeIdentifier that will match file magic numbers using the provided magic number matcher.
-        /// </summary>
-        internal FileTypeIdentifier(IFileMagicNumberMatcher fileMagicNumberMatcher)
+        internal FileTypeIdentifier(MagicNumberMapping magicNumberMapping)
         {
-            _fileMagicNumberMatcher = fileMagicNumberMatcher;
+            _magicNumberMapping = magicNumberMapping;
         }
 
         /// <summary>
-        ///     Creates a FileTypeIdentifier that will match file magic numbers using the provided magic number mapping and the
-        ///     default magic number matcher.
+        ///     Creates an instance of FileTypeIdentifier
         /// </summary>
-        public FileTypeIdentifier(IFileMagicNumberMapping fileMagicNumberMapping)
+        public FileTypeIdentifier() : this(new MagicNumberMapping())
         {
-            _fileMagicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
         }
 
         /// <inheritdoc />
         public string GetFileType(Stream fileStream)
         {
-            var longestMagicNumber = _fileMagicNumberMatcher.GetLongestMagicNumber();
+            var longestMagicNumber = _magicNumberMapping.GetLongestMagicNumber();
             var magicNumberBytes = new byte[longestMagicNumber];
             var numberOfReadBytes = fileStream.Read(magicNumberBytes, 0, magicNumberBytes.Length);
 
@@ -40,16 +35,70 @@ namespace JNysteen.FileTypeIdentifier
         /// <inheritdoc />
         public string GetFileType(byte[] fileContents)
         {
-            return _fileMagicNumberMatcher.MatchFileType(fileContents);
+            return MatchFileType(fileContents, _magicNumberMapping);
         }
 
         /// <inheritdoc />
         public string GetFileType(IEnumerable<byte> fileContents)
         {
-            var longestMagicNumber = _fileMagicNumberMatcher.GetLongestMagicNumber();
+            var longestMagicNumber = _magicNumberMapping.GetLongestMagicNumber();
             var fileHeader = fileContents.Take(longestMagicNumber).ToArray();
             
             return GetFileType(fileHeader);
+        }
+
+        /// <inheritdoc />
+        public void AddMagicNumbers(IEnumerable<byte?[]> magicNumbers, string fileType)
+        {
+            var definition = new FileMagicNumberDefinition(magicNumbers, fileType);
+            _magicNumberMapping.AddMagicNumberDefinition(definition);
+        }
+
+        /// <inheritdoc />
+        public void AddMagicNumber(byte?[] magicNumber, string fileType)
+        {
+            var definition = new FileMagicNumberDefinition(magicNumber, fileType);
+            _magicNumberMapping.AddMagicNumberDefinition(definition);
+        }
+        
+        internal static string MatchFileType(byte[] fileContentsContainingHeader, MagicNumberMapping magicNumberMapping)
+        {
+            if (fileContentsContainingHeader == null || fileContentsContainingHeader.Length == 0)
+                return null;
+
+            foreach (var fileMagicNumberDefinition in magicNumberMapping.FileMagicNumberMappingTable)
+            {
+                var fileType = fileMagicNumberDefinition.FileType;
+                foreach (var magicNumber in fileMagicNumberDefinition.MagicNumbers)
+                {
+                    // If the input is shorter than the magic number header, it is impossible to match the input against the magic number - continue
+                    if (fileContentsContainingHeader.Length < magicNumber.Length)
+                        continue;
+
+                    var failed = false;
+
+                    for (var i = 0; i < magicNumber.Length; i++)
+                    {
+                        var magicNumberByte = magicNumber[i];
+
+                        // Null bytes in the magic numbers are wildcards and should be ignored
+                        if (magicNumberByte == null)
+                            continue;
+
+                        if (magicNumberByte == fileContentsContainingHeader[i]) 
+                            continue;
+                    
+                        failed = true;
+                        break;
+                    }
+
+                    if (!failed)
+                        return fileType;
+                }
+ 
+            }
+
+            return null;
         }
     }
 }
