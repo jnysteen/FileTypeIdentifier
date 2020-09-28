@@ -60,6 +60,11 @@ namespace JNysteen.FileTypeIdentifier
             var definition = new FileMagicNumberDefinition(magicNumber, fileType);
             _magicNumberMapping.AddMagicNumberDefinition(definition);
         }
+
+        internal string MatchFileType(byte[] fileContentsContainingHeader)
+        {
+            return MatchFileType(fileContentsContainingHeader, _magicNumberMapping);
+        }
         
         internal static string MatchFileType(byte[] fileContentsContainingHeader, MagicNumberMapping magicNumberMapping)
         {

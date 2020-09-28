@@ -5,21 +5,21 @@ using NUnit.Framework;
 
 namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 {
-    public class MagicNumberMatcherUT
+    internal class FileTypeIdentifierUT
     {
         [TestCaseSource(nameof(MagicNumberMatchingShouldMatchTestCases))]
-        public void CanMatchFileType(IFileMagicNumberMapping fileMagicNumberMapping, byte[] testFileContents, string actualFileType)
+        public void CanMatchFileType(MagicNumberMapping fileMagicNumberMapping, byte[] testFileContents, string actualFileType)
         {
-            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
+            var magicNumberMatcher = new FileTypeIdentifier(fileMagicNumberMapping);
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
             identifiedFileType.Should().NotBeNull("a file type should have been identified");
             identifiedFileType.Should().Be(actualFileType);
         }
         
         [TestCaseSource(nameof(MagicNumberMatchingShouldNotMatchingTestCases))]
-        public void CanAvoidMatchingFileType(IFileMagicNumberMapping fileMagicNumberMapping, byte[] testFileContents)
+        public void CanAvoidMatchingFileType(MagicNumberMapping fileMagicNumberMapping, byte[] testFileContents)
         {
-            var magicNumberMatcher = new MagicNumberMatcher(fileMagicNumberMapping);
+            var magicNumberMatcher = new FileTypeIdentifier(fileMagicNumberMapping);
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
             identifiedFileType.Should().BeNull("no file type should have been identified");
         }
@@ -57,24 +57,21 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 
                 var multipleMappings = new MagicNumberMapping();
                 
-                var magicNumber1 = new byte?[] {1, 2, 3};
-                var fileType1 = "TEST";
-                multipleMappings.AddMagicNumberDefinition(magicNumber1, fileType1);
+                var magicNumberDef1 = new FileMagicNumberDefinition(new byte?[] {1, 2, 3}, "TEST");
+                multipleMappings.AddMagicNumberDefinition(magicNumberDef1);
             
-                var magicNumber2 = new byte?[] {1, 2, 3, 4, 5};
-                var fileType2 = fileType1 + "-other-file-type";
-                multipleMappings.AddMagicNumberDefinition(magicNumber2, fileType2);
+                var magicNumberDef2 = new FileMagicNumberDefinition(new byte?[] {1, 2, 3, 4, 5}, magicNumberDef1.FileType + "-other-file-type");
+                multipleMappings.AddMagicNumberDefinition(magicNumberDef2);
             
-                var magicNumberNotMatching = new byte?[] {1, 2, 3, 4, 5, 8};
-                var fileTypeNotMatching = fileType2 + "-completely-other-type";
-                multipleMappings.AddMagicNumberDefinition(magicNumberNotMatching, fileTypeNotMatching);
+                var magicNumberNotMatchedDef = new FileMagicNumberDefinition(new byte?[] {1, 2, 3, 4, 5, 8}, magicNumberDef2.FileType + "-completely-other-type");
+                multipleMappings.AddMagicNumberDefinition(magicNumberNotMatchedDef);
                 
                 yield return new TestCaseData(
                     new object[]
                     {
                         multipleMappings,
                         new byte[] {1, 2, 3, 4, 5, 6, 7},
-                        fileType2
+                        magicNumberDef2.FileType
                     }
                     ).SetName("Multiple matching mappings, longest match is chosen");
             }
@@ -113,7 +110,8 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         public static MagicNumberMapping CreateMappingWithSingleMagicNumber(byte?[] magicNumber, string fileType)
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
-            fileMagicNumberMapping.AddMagicNumberDefinition(magicNumber, fileType);
+            var magicNumberDef = new FileMagicNumberDefinition(magicNumber, fileType);
+            fileMagicNumberMapping.AddMagicNumberDefinition(magicNumberDef);
             return fileMagicNumberMapping;
         }
     }
