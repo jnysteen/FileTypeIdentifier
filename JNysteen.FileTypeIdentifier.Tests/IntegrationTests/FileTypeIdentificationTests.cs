@@ -35,7 +35,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
             var fileTypeIdentifier = CreateFileTypeIdentifier();
             var (filePath, actualFileType) = filePathAndActualFileType;
 
-            string identifiedFileType;
+            FileMagicNumberDefinition identifiedFileType;
             using (var fileStream = File.OpenRead(filePath))
             {
                 // Act
@@ -69,10 +69,10 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
             return fileTypeIdentifier;
         }
         
-        private static void AssertOnIdentifiedFileType(string identifiedFileType, string actualFileType)
+        private static void AssertOnIdentifiedFileType(FileMagicNumberDefinition identifiedFileType, string actualFileType)
         {
             identifiedFileType.Should().NotBeNull("the file type should have been identified");
-            var identifiedFileTypeLower = identifiedFileType.ToLower();
+            var identifiedFileTypeLower = identifiedFileType.PrimaryFileExtension.ToLower();
             var actualFileTypeLower = actualFileType.ToLower();
             identifiedFileTypeLower.Should().Be(actualFileTypeLower);
         }

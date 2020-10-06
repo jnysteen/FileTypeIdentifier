@@ -13,7 +13,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var magicNumberMatcher = new FileTypeIdentifier(fileMagicNumberMapping);
             var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
             identifiedFileType.Should().NotBeNull("a file type should have been identified");
-            identifiedFileType.Should().Be(actualFileType);
+            identifiedFileType.PrimaryFileExtension.Should().Be(actualFileType);
         }
         
         [TestCaseSource(nameof(MagicNumberMatchingShouldNotMatchingTestCases))]

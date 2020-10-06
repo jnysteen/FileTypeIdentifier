@@ -23,7 +23,7 @@ namespace JNysteen.FileTypeIdentifier
         }
 
         /// <inheritdoc />
-        public string GetFileType(Stream fileStream)
+        public FileMagicNumberDefinition GetFileType(Stream fileStream)
         {
             var longestMagicNumber = _magicNumberMapping.GetLongestMagicNumber();
             var magicNumberBytes = new byte[longestMagicNumber];
@@ -33,13 +33,13 @@ namespace JNysteen.FileTypeIdentifier
         }
 
         /// <inheritdoc />
-        public string GetFileType(byte[] fileContents)
+        public FileMagicNumberDefinition GetFileType(byte[] fileContents)
         {
             return MatchFileType(fileContents, _magicNumberMapping);
         }
 
         /// <inheritdoc />
-        public string GetFileType(IEnumerable<byte> fileContents)
+        public FileMagicNumberDefinition GetFileType(IEnumerable<byte> fileContents)
         {
             var longestMagicNumber = _magicNumberMapping.GetLongestMagicNumber();
             var fileHeader = fileContents.Take(longestMagicNumber).ToArray();
@@ -53,12 +53,12 @@ namespace JNysteen.FileTypeIdentifier
             _magicNumberMapping.AddMagicNumberDefinition(magicNumberDefinition);
         }
 
-        internal string MatchFileType(byte[] fileContentsContainingHeader)
+        internal FileMagicNumberDefinition MatchFileType(byte[] fileContentsContainingHeader)
         {
             return MatchFileType(fileContentsContainingHeader, _magicNumberMapping);
         }
         
-        internal static string MatchFileType(byte[] fileContentsContainingHeader, MagicNumberMapping magicNumberMapping)
+        internal static FileMagicNumberDefinition MatchFileType(byte[] fileContentsContainingHeader, MagicNumberMapping magicNumberMapping)
         {
             if (fileContentsContainingHeader == null || fileContentsContainingHeader.Length == 0)
                 return null;
@@ -90,7 +90,7 @@ namespace JNysteen.FileTypeIdentifier
                     }
 
                     if (!failed)
-                        return fileType;
+                        return fileMagicNumberDefinition;
                 }
  
             }

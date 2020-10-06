@@ -12,19 +12,19 @@ namespace JNysteen.FileTypeIdentifier.Interfaces
         ///     Attempts to identify the file type using the contents of the file byte stream. If the file type is recognized, the
         ///     name of it is returned - otherwise, null is returned.
         /// </summary>
-        string GetFileType(Stream fileStream);
+        FileMagicNumberDefinition GetFileType(Stream fileStream);
 
         /// <summary>
         ///     Attempts to identify the file type using the file bytes. If the file type is recognized, the name of it is returned
         ///     - otherwise, null is returned.
         /// </summary>
-        string GetFileType(byte[] fileContents);
+        FileMagicNumberDefinition GetFileType(byte[] fileContents);
         
         /// <summary>
         ///     Attempts to identify the file type using the file bytes. If the file type is recognized, the name of it is returned
         ///     - otherwise, null is returned.
         /// </summary>
-        string GetFileType(IEnumerable<byte> fileContents);
+        FileMagicNumberDefinition GetFileType(IEnumerable<byte> fileContents);
 
         /// <summary>
         ///     Configure the file type identifier with the magic number for the given file type
