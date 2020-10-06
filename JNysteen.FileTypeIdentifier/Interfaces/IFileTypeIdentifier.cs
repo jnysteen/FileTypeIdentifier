@@ -27,17 +27,9 @@ namespace JNysteen.FileTypeIdentifier.Interfaces
         string GetFileType(IEnumerable<byte> fileContents);
 
         /// <summary>
-        ///     Configure the file type identifier with the magic numbers for the given file type
-        /// </summary>
-        /// <param name="magicNumbers">One or more magic numbers for the file type</param>
-        /// <param name="fileType">The name of the file type</param>
-        void AddMagicNumbers(IEnumerable<byte?[]> magicNumbers, string fileType);
-        
-        /// <summary>
         ///     Configure the file type identifier with the magic number for the given file type
         /// </summary>
-        /// <param name="magicNumber">A magic number for the file type</param>
-        /// <param name="fileType">The name of the file type</param>
-        void AddMagicNumber(byte?[] magicNumber, string fileType);
+        /// <param name="magicNumberDefinition">A magic number for the file type</param>
+        void AddMagicNumberDefinition(FileMagicNumberDefinition magicNumberDefinition);
     }
 }

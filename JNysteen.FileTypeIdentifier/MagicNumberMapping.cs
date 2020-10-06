@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JNysteen.FileTypeIdentifier.Exceptions;
 
@@ -18,6 +19,9 @@ namespace JNysteen.FileTypeIdentifier
 
         public void AddMagicNumberDefinition(FileMagicNumberDefinition fileMagicNumberDefinition)
         {
+            if (fileMagicNumberDefinition == null) 
+                throw new ArgumentNullException(nameof(fileMagicNumberDefinition));
+            
             FileMagicNumberMappingTable.Add(fileMagicNumberDefinition);
             FileMagicNumberMappingTable.Sort((oneMagicNumber, otherMagicNumber) => oneMagicNumber.LongestMagicNumber > otherMagicNumber.LongestMagicNumber ? -1 : 1);
         }

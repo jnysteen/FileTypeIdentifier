@@ -13,7 +13,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         public void AddMagicNumber_Positive()
         {
             // Arrange
-            var magicNumberDefinition = new FileMagicNumberDefinition(ValidMagicNumber, "test");
+            var magicNumberDefinition = new FileMagicNumberDefinition("test", ValidMagicNumber);
 
             // Act
             var magicNumberMapping = new MagicNumberMapping();
@@ -34,7 +34,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             {
                 var magicNumber = Enumerable.Repeat(new byte?(1), i).ToArray();
                 var type = i.ToString();
-                var def = new FileMagicNumberDefinition(magicNumber, type);
+                var def = new FileMagicNumberDefinition(type, magicNumber);
                 fileMagicNumberMapping.AddMagicNumberDefinition(def);
             }
 

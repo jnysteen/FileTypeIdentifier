@@ -48,17 +48,9 @@ namespace JNysteen.FileTypeIdentifier
         }
 
         /// <inheritdoc />
-        public void AddMagicNumbers(IEnumerable<byte?[]> magicNumbers, string fileType)
+        public void AddMagicNumberDefinition(FileMagicNumberDefinition magicNumberDefinition)
         {
-            var definition = new FileMagicNumberDefinition(magicNumbers, fileType);
-            _magicNumberMapping.AddMagicNumberDefinition(definition);
-        }
-
-        /// <inheritdoc />
-        public void AddMagicNumber(byte?[] magicNumber, string fileType)
-        {
-            var definition = new FileMagicNumberDefinition(magicNumber, fileType);
-            _magicNumberMapping.AddMagicNumberDefinition(definition);
+            _magicNumberMapping.AddMagicNumberDefinition(magicNumberDefinition);
         }
 
         internal string MatchFileType(byte[] fileContentsContainingHeader)
@@ -73,7 +65,7 @@ namespace JNysteen.FileTypeIdentifier
 
             foreach (var fileMagicNumberDefinition in magicNumberMapping.FileMagicNumberMappingTable)
             {
-                var fileType = fileMagicNumberDefinition.FileType;
+                var fileType = fileMagicNumberDefinition.PrimaryFileExtension;
                 foreach (var magicNumber in fileMagicNumberDefinition.MagicNumbers)
                 {
                     // If the input is shorter than the magic number header, it is impossible to match the input against the magic number - continue

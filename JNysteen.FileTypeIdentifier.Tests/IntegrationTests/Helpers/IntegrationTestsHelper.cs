@@ -17,12 +17,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests.Helpers
             var testFilesDirectory = GetTestFilesDirectory();
 
             foreach (var testFile in Directory.GetFiles(testFilesDirectory))
-            {
-                var fileExtension =
-                    Path.GetExtension(testFile).Substring(1); // Substring -> skip the dot in the extension
-
-                yield return (testFile, fileExtension);
-            }
+                yield return (testFile, Path.GetExtension(testFile));
         }
 
         private static string GetTestDirectory()
@@ -42,11 +37,11 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests.Helpers
         {
             var magicNumberMapping = new MagicNumberMapping();
 
-            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(ImageMagicNumbers.BMPMagicNumbers, ImageMagicNumbers.BMP));
-            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(ImageMagicNumbers.GIFMagicNumbers, ImageMagicNumbers.GIF));
-            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(ImageMagicNumbers.JPEGMagicNumbers, ImageMagicNumbers.JPEG));
-            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(ImageMagicNumbers.PNGMagicNumbers, ImageMagicNumbers.PNG));
-            magicNumberMapping.AddMagicNumberDefinition(new FileMagicNumberDefinition(DocumentMagicNumbers.PDFMagicNumbers, DocumentMagicNumbers.PDF));
+            magicNumberMapping.AddMagicNumberDefinition(ImageMagicNumbers.BMP);
+            magicNumberMapping.AddMagicNumberDefinition(ImageMagicNumbers.GIF);
+            magicNumberMapping.AddMagicNumberDefinition(ImageMagicNumbers.JPEG);
+            magicNumberMapping.AddMagicNumberDefinition(ImageMagicNumbers.PNG);
+            magicNumberMapping.AddMagicNumberDefinition(DocumentMagicNumbers.PDF);
 
             return magicNumberMapping;
         }

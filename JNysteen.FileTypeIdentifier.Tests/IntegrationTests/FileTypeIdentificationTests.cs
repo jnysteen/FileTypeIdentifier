@@ -18,9 +18,8 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         {
             var fileTypeIdentifier = new FileTypeIdentifier();
 
-            var magicNumber = new byte?[] {1, 2, 3};
-            var fileType = "TEST";
-            fileTypeIdentifier.AddMagicNumber(magicNumber, fileType);
+            var definition = new FileMagicNumberDefinition(".test", new byte?[] {1, 2, 3});
+            fileTypeIdentifier.AddMagicNumberDefinition(definition);
 
             byte[] testFileContents = null;
 

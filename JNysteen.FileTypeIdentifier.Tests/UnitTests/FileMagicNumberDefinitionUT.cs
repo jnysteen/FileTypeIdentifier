@@ -12,7 +12,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         [TestCaseSource(nameof(FileMagicNumberDefinitionCreation_SingleNumber_BadArguments))]
         public void FileMagicNumberDefinitionCreationTests_SingleNumber_ArgumentExceptionExpected(byte?[] magicNumber, string fileType)
         {
-            Action act = () => new FileMagicNumberDefinition(magicNumber, fileType);
+            Action act = () => new FileMagicNumberDefinition(fileType, magicNumber);
             act.Should().Throw<ArgumentException>();
         }
 

@@ -57,13 +57,13 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
 
                 var multipleMappings = new MagicNumberMapping();
                 
-                var magicNumberDef1 = new FileMagicNumberDefinition(new byte?[] {1, 2, 3}, "TEST");
+                var magicNumberDef1 = new FileMagicNumberDefinition("TEST", new byte?[] {1, 2, 3});
                 multipleMappings.AddMagicNumberDefinition(magicNumberDef1);
             
-                var magicNumberDef2 = new FileMagicNumberDefinition(new byte?[] {1, 2, 3, 4, 5}, magicNumberDef1.FileType + "-other-file-type");
+                var magicNumberDef2 = new FileMagicNumberDefinition(magicNumberDef1.PrimaryFileExtension + "-other-file-type", new byte?[] {1, 2, 3, 4, 5});
                 multipleMappings.AddMagicNumberDefinition(magicNumberDef2);
             
-                var magicNumberNotMatchedDef = new FileMagicNumberDefinition(new byte?[] {1, 2, 3, 4, 5, 8}, magicNumberDef2.FileType + "-completely-other-type");
+                var magicNumberNotMatchedDef = new FileMagicNumberDefinition(magicNumberDef2.PrimaryFileExtension + "-completely-other-type", new byte?[] {1, 2, 3, 4, 5, 8});
                 multipleMappings.AddMagicNumberDefinition(magicNumberNotMatchedDef);
                 
                 yield return new TestCaseData(
@@ -71,7 +71,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
                     {
                         multipleMappings,
                         new byte[] {1, 2, 3, 4, 5, 6, 7},
-                        magicNumberDef2.FileType
+                        magicNumberDef2.PrimaryFileExtension
                     }
                     ).SetName("Multiple matching mappings, longest match is chosen");
             }
@@ -110,7 +110,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         public static MagicNumberMapping CreateMappingWithSingleMagicNumber(byte?[] magicNumber, string fileType)
         {
             var fileMagicNumberMapping = new MagicNumberMapping();
-            var magicNumberDef = new FileMagicNumberDefinition(magicNumber, fileType);
+            var magicNumberDef = new FileMagicNumberDefinition(fileType, magicNumber);
             fileMagicNumberMapping.AddMagicNumberDefinition(magicNumberDef);
             return fileMagicNumberMapping;
         }

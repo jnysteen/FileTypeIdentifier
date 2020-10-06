@@ -20,7 +20,7 @@ namespace JNysteen.FileTypeIdentifier.ConsoleApplication
             var fileTypeIdentifier = new FileTypeIdentifier();
             // Add the file magic numbers for the PDF file type
             // If more types of files should be recognized, they can be added to the file magic number mapping here
-            fileTypeIdentifier.AddMagicNumbers(DocumentMagicNumbers.PDFMagicNumbers, DocumentMagicNumbers.PDF);
+            fileTypeIdentifier.AddMagicNumberDefinition(DocumentMagicNumbers.PDF);
 
             while (true)
             {

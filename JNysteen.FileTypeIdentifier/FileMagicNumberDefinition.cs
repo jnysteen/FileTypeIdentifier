@@ -4,22 +4,53 @@ using System.Linq;
 
 namespace JNysteen.FileTypeIdentifier
 {
-    internal class FileMagicNumberDefinition
+    /// <summary>
+    ///     A definition of a file type and it's magic numbers
+    /// </summary>
+    public class FileMagicNumberDefinition
     {
-        public string FileType { get; }
+        /// <summary>
+        ///     The primary extension for the file type
+        /// </summary>
+        public string PrimaryFileExtension { get; }
+        
+        /// <summary>
+        ///     Other known extensions for the file (if needed)
+        /// </summary>
+        public List<string> OtherFileExtensions { get; set; }
+        
+        /// <summary>
+        ///     MIME types for the file (if needed)
+        /// </summary>
+        public List<string> MimeTypes { get; set; }
+        
+        /// <summary>
+        ///     Known magic numbers for the file type
+        /// </summary>
         public List<byte?[]> MagicNumbers { get; }
+        
+        /// <summary>
+        ///     The lenght of the longest configured magic number for the file type
+        /// </summary>
         public int LongestMagicNumber => MagicNumbers.OrderByDescending(m => m.Length).First().Length;
         
-        public FileMagicNumberDefinition(IEnumerable<byte?[]> magicNumbers, string fileType)
+        /// <summary>
+        ///     Instantiates a new magic number definition for a file type
+        /// </summary>
+        /// <param name="primaryFileExtension">The primary extension for the file type</param>
+        /// <param name="magicNumbers">Magic numbers identifying the file type. Any wildcard bytes can be represented as `null`</param>
+        /// <exception cref="ArgumentNullException">Thrown if one or more arguments are null</exception>
+        /// <exception cref="ArgumentException">Thrown if one or more arguments are invalid</exception>
+        public FileMagicNumberDefinition(string primaryFileExtension, IEnumerable<byte?[]> magicNumbers)
         {
             if (magicNumbers == null)
                 throw new ArgumentNullException(nameof(magicNumbers));
             
-            if (fileType == null)
-                throw new ArgumentNullException(nameof(fileType));
+            if (primaryFileExtension == null)
+                throw new ArgumentNullException(nameof(primaryFileExtension));
 
-            if (string.IsNullOrWhiteSpace(fileType))
-                throw new ArgumentException("File type did not contain any characters!", nameof(fileType));
+            if (string.IsNullOrWhiteSpace(primaryFileExtension))
+                throw new ArgumentException("File type did not contain any characters!", nameof(primaryFileExtension));
 
             var magicNumbersEnumerated = magicNumbers.ToList();
             
@@ -33,10 +64,17 @@ namespace JNysteen.FileTypeIdentifier
             }
 
             MagicNumbers = magicNumbersEnumerated;
-            FileType = fileType;
+            PrimaryFileExtension = primaryFileExtension;
         }
         
-        public FileMagicNumberDefinition(byte?[] magicNumber, string fileType) : this(new List<byte?[]>() {magicNumber}, fileType)
+        /// <summary>
+        ///     Instantiates a new magic number definition for a file type
+        /// </summary>
+        /// <param name="primaryFileExtension">The primary extension for the file type</param>
+        /// <param name="magicNumber">A magic number identifying the file type. Any wildcard bytes can be represented as `null`</param>
+        /// <exception cref="ArgumentNullException">Thrown if one or more arguments are null</exception>
+        /// <exception cref="ArgumentException">Thrown if one or more arguments are invalid</exception>
+        public FileMagicNumberDefinition(string primaryFileExtension, byte?[] magicNumber) : this(primaryFileExtension, new List<byte?[]> {magicNumber})
         { }
     }
 }
