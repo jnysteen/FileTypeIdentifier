@@ -33,15 +33,16 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests.Helpers
             return Path.Combine(GetTestDirectory(), "IntegrationTests/TestFiles");
         }
 
-        public static MagicNumberMapping GetAllMappings()
+        public static List<FileMagicNumberDefinition> GetAllMappings()
         {
-            var magicNumberMapping = new MagicNumberMapping();
-
-            magicNumberMapping.AddMagicNumberDefinition(ImageMagicNumbers.BMP);
-            magicNumberMapping.AddMagicNumberDefinition(ImageMagicNumbers.GIF);
-            magicNumberMapping.AddMagicNumberDefinition(ImageMagicNumbers.JPEG);
-            magicNumberMapping.AddMagicNumberDefinition(ImageMagicNumbers.PNG);
-            magicNumberMapping.AddMagicNumberDefinition(DocumentMagicNumbers.PDF);
+            var magicNumberMapping = new List<FileMagicNumberDefinition>
+            {
+                ImageMagicNumbers.BMP,
+                ImageMagicNumbers.GIF,
+                ImageMagicNumbers.JPEG,
+                ImageMagicNumbers.PNG,
+                DocumentMagicNumbers.PDF
+            };
 
             return magicNumberMapping;
         }

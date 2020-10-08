@@ -63,7 +63,7 @@ namespace JNysteen.FileTypeIdentifier
                     throw new ArgumentException("Magic number did not contain any bytes!", nameof(magicNumber));
             }
 
-            MagicNumbers = magicNumbersEnumerated;
+            MagicNumbers = magicNumbersEnumerated.OrderByDescending(m => m.Length).ToList();
             PrimaryFileExtension = primaryFileExtension;
         }
         
