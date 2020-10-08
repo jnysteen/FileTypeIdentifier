@@ -68,6 +68,8 @@ namespace JNysteen.FileTypeIdentifier
         
         internal static FileMagicNumberDefinition MatchFileType(byte[] fileContentsContainingHeader, List<FileMagicNumberDefinition> fileMagicNumberDefinitions)
         {
+            // TODO replace the list with a trie
+            
             if (fileContentsContainingHeader == null || fileContentsContainingHeader.Length == 0)
                 return null;
 
