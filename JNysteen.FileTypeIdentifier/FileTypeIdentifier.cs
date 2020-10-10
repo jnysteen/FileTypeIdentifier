@@ -9,30 +9,31 @@ namespace JNysteen.FileTypeIdentifier
     /// <inheritdoc />
     public class FileTypeIdentifier : IFileTypeIdentifier
     {
-        private readonly List<FileMagicNumberDefinition> _fileMagicNumberDefinitions;
-        private int _longestMagicNumber;
+        private readonly FileMagicNumberDefinitionTrie _fileMagicNumberDefinitions;
 
-        internal FileTypeIdentifier(List<FileMagicNumberDefinition> magicNumberDefinitions)
+        internal FileTypeIdentifier(FileMagicNumberDefinitionTrie magicNumberDefinitions)
         {
             _fileMagicNumberDefinitions = magicNumberDefinitions ?? throw new ArgumentNullException(nameof(magicNumberDefinitions));
-            _longestMagicNumber = magicNumberDefinitions.Any() ? magicNumberDefinitions.Max(m => m.LongestMagicNumber) : 0;
         }
 
         /// <summary>
         ///     Creates an instance of FileTypeIdentifier
         /// </summary>
-        public FileTypeIdentifier() : this(new List<FileMagicNumberDefinition>())
+        public FileTypeIdentifier() : this(new FileMagicNumberDefinitionTrie())
         {
         }
 
         /// <inheritdoc />
         public FileMagicNumberDefinition GetFileType(Stream stream)
+        { 
+            return GetFileType(StreamAsIEnumerable(stream));
+        }
+        
+        private static IEnumerable<byte> StreamAsIEnumerable(Stream stream)
         {
-            var longestMagicNumber = _longestMagicNumber;
-            var magicNumberBytes = new byte[longestMagicNumber];
-            var numberOfReadBytes = stream.Read(magicNumberBytes, 0, magicNumberBytes.Length);
-
-            return GetFileType(magicNumberBytes);
+            if (stream != null)
+                for (int i = stream.ReadByte(); i != -1; i = stream.ReadByte())
+                    yield return (byte)i;
         }
 
         /// <inheritdoc />
@@ -44,10 +45,7 @@ namespace JNysteen.FileTypeIdentifier
         /// <inheritdoc />
         public FileMagicNumberDefinition GetFileType(IEnumerable<byte> fileContents)
         {
-            var longestMagicNumber = _longestMagicNumber;
-            var fileHeader = fileContents.Take(longestMagicNumber).ToArray();
-            
-            return GetFileType(fileHeader);
+            return MatchFileType(fileContents, _fileMagicNumberDefinitions);
         }
 
         /// <inheritdoc />
@@ -55,55 +53,19 @@ namespace JNysteen.FileTypeIdentifier
         {
             if (magicNumberDefinition == null) 
                 throw new ArgumentNullException(nameof(magicNumberDefinition));
-            
-            _fileMagicNumberDefinitions.Add(magicNumberDefinition);
-            if (magicNumberDefinition.LongestMagicNumber > _longestMagicNumber)
-                _longestMagicNumber = magicNumberDefinition.LongestMagicNumber;
-        }
 
-        internal FileMagicNumberDefinition MatchFileType(byte[] fileContentsContainingHeader)
-        {
-            return MatchFileType(fileContentsContainingHeader, _fileMagicNumberDefinitions);
+            foreach (var magicNumber in magicNumberDefinition.MagicNumbers)
+            {
+                _fileMagicNumberDefinitions.Add(magicNumberDefinition, magicNumber);
+            }
         }
         
-        internal static FileMagicNumberDefinition MatchFileType(byte[] fileContentsContainingHeader, List<FileMagicNumberDefinition> fileMagicNumberDefinitions)
+        internal static FileMagicNumberDefinition MatchFileType(IEnumerable<byte> fileContentsContainingHeader, FileMagicNumberDefinitionTrie fileMagicNumberDefinitions)
         {
-            // TODO replace the list with a trie
-            
-            if (fileContentsContainingHeader == null || fileContentsContainingHeader.Length == 0)
+            if (fileContentsContainingHeader == null)
                 return null;
-
-            foreach (var fileMagicNumberDefinition in fileMagicNumberDefinitions)
-            {
-                foreach (var magicNumber in fileMagicNumberDefinition.MagicNumbers)
-                {
-                    // If the input is shorter than the magic number header, it is impossible to match the input against the magic number - skip it
-                    if (fileContentsContainingHeader.Length < magicNumber.Length)
-                        continue;
-
-                    var failed = false;
-
-                    for (var i = 0; i < magicNumber.Length; i++)
-                    {
-                        var magicNumberByte = magicNumber[i];
-
-                        // Null bytes in the magic numbers are wildcards and should be ignored
-                        if (magicNumberByte == null)
-                            continue;
-
-                        if (magicNumberByte == fileContentsContainingHeader[i]) 
-                            continue;
-                    
-                        failed = true;
-                        break;
-                    }
-
-                    if (!failed)
-                        return fileMagicNumberDefinition;
-                }
-            }
-
-            return null;
+            var casted = fileContentsContainingHeader.Select(f => f as byte?);
+            return fileMagicNumberDefinitions.GetLongestMatch(casted);
         }
     }
 }

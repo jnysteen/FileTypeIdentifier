@@ -11,8 +11,8 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         [TestCaseSource(nameof(MagicNumberMatchingShouldMatchTestCases))]
         public void CanMatchFileType(List<FileMagicNumberDefinition> definitions, byte[] testFileContents, string actualFileType)
         {
-            var magicNumberMatcher = new FileTypeIdentifier(definitions);
-            var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
+            var trie = CreateTrie(definitions);
+            var identifiedFileType = FileTypeIdentifier.MatchFileType(testFileContents, trie);
             identifiedFileType.Should().NotBeNull("a file type should have been identified");
             identifiedFileType.PrimaryFileExtension.Should().Be(actualFileType);
         }
@@ -20,9 +20,23 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         [TestCaseSource(nameof(MagicNumberMatchingShouldNotMatchingTestCases))]
         public void CanAvoidMatchingFileType(List<FileMagicNumberDefinition> definitions, byte[] testFileContents)
         {
-            var magicNumberMatcher = new FileTypeIdentifier(definitions);
-            var identifiedFileType = magicNumberMatcher.MatchFileType(testFileContents);
+            var trie = CreateTrie(definitions);
+            var identifiedFileType = FileTypeIdentifier.MatchFileType(testFileContents, trie);
             identifiedFileType.Should().BeNull("no file type should have been identified");
+        }
+
+        private static FileMagicNumberDefinitionTrie CreateTrie(List<FileMagicNumberDefinition> definitions)
+        {
+            var trie = new FileMagicNumberDefinitionTrie();
+            foreach (var fileMagicNumberDefinition in definitions)
+            {
+                foreach (var magicNumber in fileMagicNumberDefinition.MagicNumbers)
+                {
+                    trie.Add(fileMagicNumberDefinition, magicNumber);
+                }
+            }
+
+            return trie;
         }
 
         public static IEnumerable MagicNumberMatchingShouldMatchTestCases

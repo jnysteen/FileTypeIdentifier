@@ -64,8 +64,16 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         
         private static FileTypeIdentifier CreateFileTypeIdentifier()
         {
-            var fileMagicNumberMapping = IntegrationTestsHelper.GetAllMappings();
-            var fileTypeIdentifier = new FileTypeIdentifier(fileMagicNumberMapping);
+            var definitions = IntegrationTestsHelper.GetAllMappings();
+            var trie = new FileMagicNumberDefinitionTrie();
+            foreach (var fileMagicNumberDefinition in definitions)
+            {
+                foreach (var magicNumber in fileMagicNumberDefinition.MagicNumbers)
+                {
+                    trie.Add(fileMagicNumberDefinition, magicNumber);
+                }
+            }
+            var fileTypeIdentifier = new FileTypeIdentifier(trie);
             return fileTypeIdentifier;
         }
         
