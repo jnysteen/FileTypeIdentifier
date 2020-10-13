@@ -31,19 +31,19 @@ namespace JNysteen.FileTypeIdentifier
             return _rootNode.GetLongestMatch(sequence, 0).value;
         }
 
-        internal class TrieNode<TKey, TValue>
+        internal class TrieNode
         {
-            public TKey WildCard { get; }
-            internal TKey Key { get; set; }
+            public TKeyElement WildCard { get; }
+            internal TKeyElement Key { get; set; }
             internal TValue Value { get; set; }
-            internal Dictionary<NullWrapper<TKey>, TrieNode<TKey, TValue>> Children { get; set; } = new Dictionary<NullWrapper<TKey>, TrieNode<TKey, TValue>>();
+            internal Dictionary<NullWrapper<TKeyElement>, TrieNode> Children { get; set; } = new Dictionary<NullWrapper<TKeyElement>, TrieNode>();
 
-            public TrieNode(TKey wildCard = default)
+            public TrieNode(TKeyElement wildCard = default)
             {
                 WildCard = wildCard;
             }
             
-            public void Add(TValue entity, TKey[] keySequence, int currentIndex)
+            public void Add(TValue entity, TKeyElement[] keySequence, int currentIndex)
             {
                 var currentKey = keySequence[currentIndex];
                 Key = currentKey;
@@ -55,14 +55,14 @@ namespace JNysteen.FileTypeIdentifier
                     return;
                 }
 
-                var nextKey = new NullWrapper<TKey>(keySequence[currentIndex + 1]);
+                var nextKey = new NullWrapper<TKeyElement>(keySequence[currentIndex + 1]);
                 
-                TrieNode<TKey, TValue> nextNode;
+                TrieNode nextNode;
                 var hasMatchingChildForPrefix = Children.TryGetValue(nextKey, out nextNode);
 
                 if (!hasMatchingChildForPrefix)
                 {
-                    nextNode = new TrieNode<TKey, TValue>()
+                    nextNode = new TrieNode()
                     {
                         Key = nextKey.Value
                     };
@@ -72,7 +72,7 @@ namespace JNysteen.FileTypeIdentifier
                 nextNode.Add(entity, keySequence, currentIndex+1);
             }
             
-            public (TValue value, int foundAtIndex) GetLongestMatch(TKey[] remainingPrefixElements, int currentIndex)
+            public (TValue value, int foundAtIndex) GetLongestMatch(TKeyElement[] remainingPrefixElements, int currentIndex)
             {
                 var isLastPrefixElement = currentIndex == remainingPrefixElements.Length - 1;
                 var currentKey = remainingPrefixElements[currentIndex];
@@ -86,15 +86,15 @@ namespace JNysteen.FileTypeIdentifier
                 var nextKey = remainingPrefixElements[currentIndex + 1];
                 
                 // A list of all the tries that should be matched against
-                var triesToMatch = new List<TrieNode<TKey, TValue>>();
+                var triesToMatch = new List<TrieNode>();
 
                 // Add any node that matches the next key
-                Children.TryGetValue(new NullWrapper<TKey>(nextKey), out var nextTrieWithMatchingKey);
+                Children.TryGetValue(new NullWrapper<TKeyElement>(nextKey), out var nextTrieWithMatchingKey);
                 if(nextTrieWithMatchingKey != null)
                     triesToMatch.Add(nextTrieWithMatchingKey);
                 
                 // Add any wild card that is an immediate descendant of this node
-                Children.TryGetValue(new NullWrapper<TKey>(WildCard), out var nextWildcardTrie);
+                Children.TryGetValue(new NullWrapper<TKeyElement>(WildCard), out var nextWildcardTrie);
                 if(nextWildcardTrie != null)
                     triesToMatch.Add(nextWildcardTrie);
                 

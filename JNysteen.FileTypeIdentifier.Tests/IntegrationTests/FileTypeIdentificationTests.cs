@@ -11,7 +11,9 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
     public class FileTypeIdentificationTests
     {
         public static IEnumerable TestFiles => IntegrationTestsHelper.GetTestFiles()
-            .Select(t => new object[] {(t.filePath, t.fileExtension)});
+            .Select(t => 
+                new TestCaseData(new object[]{t.filePath, t.fileExtension})
+                .SetName(Path.GetFileName(t.filePath)));
         
         [Theory]
         public void InputHeaderIsNull_Negative()
@@ -29,11 +31,10 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
         
         [Theory]
         [TestCaseSource(nameof(TestFiles))]
-        public void CorrectlyIdentifiesTestFiles_StreamAsInput((string filePath, string actualFileType) filePathAndActualFileType)
+        public void CorrectlyIdentifiesTestFiles_StreamAsInput(string filePath, string actualFileType)
         {
             // Arrange
             var fileTypeIdentifier = CreateFileTypeIdentifier();
-            var (filePath, actualFileType) = filePathAndActualFileType;
 
             FileMagicNumberDefinition identifiedFileType;
             using (var fileStream = File.OpenRead(filePath))
@@ -48,11 +49,10 @@ namespace JNysteen.FileTypeIdentifier.Tests.IntegrationTests
 
         [Theory]
         [TestCaseSource(nameof(TestFiles))]
-        public void CorrectlyIdentifiesTestFiles_ByteEnumerableAsInput((string filePath, string actualFileType) filePathAndActualFileType)
+        public void CorrectlyIdentifiesTestFiles_ByteEnumerableAsInput(string filePath, string actualFileType)
         {
             // Arrange
             var fileTypeIdentifier = CreateFileTypeIdentifier();
-            var (filePath, actualFileType) = filePathAndActualFileType;
             var fileBytesAsEnumerable = File.ReadAllBytes(filePath).AsEnumerable();
 
             // Act

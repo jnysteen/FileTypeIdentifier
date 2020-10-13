@@ -12,9 +12,9 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
         public void CanInsertIntoTrie()
         {
             // Arrange
-            var trie = new Trie<byte?, FileMagicNumberDefinition>();
             var onlyMagicNumber = new byte?[] {1, 2, null, 4};
             var definition = new FileMagicNumberDefinition(".test", onlyMagicNumber);
+            var trie = new Trie<byte?, FileMagicNumberDefinition>();
             
             // Act
             trie.Add(definition, onlyMagicNumber);
