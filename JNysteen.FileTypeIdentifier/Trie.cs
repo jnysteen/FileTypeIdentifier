@@ -6,19 +6,19 @@ namespace JNysteen.FileTypeIdentifier
 {
     internal class Trie<TKeyElement, TValue>
     {
-        private readonly TrieNode<TKeyElement, TValue> _rootNode;
+        private readonly TrieNode _rootNode;
         private int _longestContainedPrefix;
         
         public Trie()
         {
-            _rootNode = new TrieNode<TKeyElement, TValue>();
+            _rootNode = new TrieNode();
         }
         
         public void Add(TValue entity, IEnumerable<TKeyElement> prefix)
         {
             var enumeratedElements = prefix.ToArray();
             _longestContainedPrefix = Math.Max(enumeratedElements.Length, _longestContainedPrefix);
-            _rootNode.Add(entity, enumeratedElements, 0);
+            _rootNode.Add(entity, enumeratedElements);
         }
 
         public TValue GetLongestMatch(IEnumerable<TKeyElement> keySequence)
@@ -29,6 +29,15 @@ namespace JNysteen.FileTypeIdentifier
             if (sequence.Length == 0)
                 return default;
             return _rootNode.GetLongestMatch(sequence, 0).value;
+        }
+
+        /// <summary>
+        ///     Returns the count of all unique nodes included in the trie
+        /// </summary>
+        public int GetNodeCount()
+        {
+            // We subtract one as we do not include the root node in the count
+            return _rootNode.GetNodeCount() - 1;
         }
 
         internal class TrieNode
@@ -43,7 +52,7 @@ namespace JNysteen.FileTypeIdentifier
                 WildCard = wildCard;
             }
             
-            public void Add(TValue entity, TKeyElement[] keySequence, int currentIndex)
+            public void Add(TValue entity, TKeyElement[] keySequence, int currentIndex = 0)
             {
                 var currentKey = keySequence[currentIndex];
                 Key = currentKey;
@@ -112,6 +121,27 @@ namespace JNysteen.FileTypeIdentifier
                 // Return the longest match found beyond this node, if any
                 // Otherwise, this node is the best match - return this
                 return longestMatch.value != null ? longestMatch : (Value, currentIndex);
+            }
+            
+            /// <summary>
+            ///     Returns the count of all unique nodes included in the tree where this node is the root.
+            ///     The count also includes this node
+            /// </summary>
+            public int GetNodeCount()
+            {
+                var uniqueNodes = GetUniqueNodes();
+                return uniqueNodes?.Count ?? 0;
+            }
+
+            private HashSet<TrieNode> GetUniqueNodes(HashSet<TrieNode> acc = null)
+            {
+                if (acc?.Contains(this) == true)
+                    return acc;
+                
+                acc ??= new HashSet<TrieNode>();
+                acc.Add(this);
+
+                return Children.Aggregate(acc, (current, child) => child.Value.GetUniqueNodes(current));
             }
 
             /// <summary>

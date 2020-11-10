@@ -15,12 +15,14 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var onlyMagicNumber = new byte?[] {1, 2, null, 4};
             var definition = new FileMagicNumberDefinition(".test", onlyMagicNumber);
             var trie = new Trie<byte?, FileMagicNumberDefinition>();
+
+            trie.GetNodeCount().Should().Be(0, "no nodes should exist in the trie");
             
             // Act
             trie.Add(definition, onlyMagicNumber);
             
             // Assert
-            Assert.Fail("assert something here");
+            trie.GetNodeCount().Should().Be(onlyMagicNumber.Length, "nodes should have been inserted into the trie");
         }
     }
 }
