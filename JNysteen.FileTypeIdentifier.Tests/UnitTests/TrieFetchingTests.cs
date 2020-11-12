@@ -17,7 +17,7 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
             var definition1 = new FileMagicNumberDefinition(".test", new byte?[] {1, 2, null, 4});
             TestTrie.Add(definition1, definition1.MagicNumbers.FirstOrDefault());
             
-            var definition2 = new FileMagicNumberDefinition(".test-should-not-match", new byte?[] {1, 2, 255});
+            var definition2 = new FileMagicNumberDefinition(".test-should-not-match", new byte?[] {2, 2, 255});
             TestTrie.Add(definition2, definition2.MagicNumbers.FirstOrDefault());
         }
 
@@ -71,6 +71,13 @@ namespace JNysteen.FileTypeIdentifier.Tests.UnitTests
                         new byte?[] {1, 2, 3, 100}, null 
                     }
                 ).SetName("File contents does not match any of the configured magic number definitions");
+                
+                yield return new TestCaseData(
+                    new object[]
+                    {
+                        new byte?[] {5, 2, 3, 4, 5, 6, 7}, null 
+                    }
+                ).SetName("File contents does not start with any of the configured magic number definitions");
             }
         } 
     }

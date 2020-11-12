@@ -6,19 +6,19 @@ namespace JNysteen.FileTypeIdentifier
 {
     internal class Trie<TKeyElement, TValue>
     {
-        private readonly TrieNode _rootNode;
+        internal readonly TrieNode RootNode;
         private int _longestContainedPrefix;
         
         public Trie()
         {
-            _rootNode = new TrieNode();
+            RootNode = new TrieNode();
         }
         
         public void Add(TValue entity, IEnumerable<TKeyElement> prefix)
         {
             var enumeratedElements = prefix.ToArray();
             _longestContainedPrefix = Math.Max(enumeratedElements.Length, _longestContainedPrefix);
-            _rootNode.Add(entity, enumeratedElements);
+            RootNode.Add(entity, enumeratedElements);
         }
 
         public TValue GetLongestMatch(IEnumerable<TKeyElement> keySequence)
@@ -28,7 +28,7 @@ namespace JNysteen.FileTypeIdentifier
             var sequence = keySequence.Take(_longestContainedPrefix).ToArray();
             if (sequence.Length == 0)
                 return default;
-            return _rootNode.GetLongestMatch(sequence, 0).value;
+            return RootNode.GetLongestMatch(sequence, 0).value;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace JNysteen.FileTypeIdentifier
         public int GetNodeCount()
         {
             // We subtract one as we do not include the root node in the count
-            return _rootNode.GetNodeCount() - 1;
+            return RootNode.GetNodeCount() - 1;
         }
 
         internal class TrieNode
@@ -51,38 +51,93 @@ namespace JNysteen.FileTypeIdentifier
             {
                 WildCard = wildCard;
             }
-            
-            public void Add(TValue entity, TKeyElement[] keySequence, int currentIndex = 0)
+
+            public static List<TrieNode> ConvertSequenceToTrieNodeChain(TValue entity, TKeyElement[] keySequence)
             {
-                var currentKey = keySequence[currentIndex];
-                Key = currentKey;
-                
-                // If this is the last part of the keys, place the entity at this node
-                if (currentIndex == keySequence.Length - 1)
+                var chain = new List<TrieNode>();
+                for (var i = 0; i < keySequence.Length; i++)
                 {
-                    Value = entity;
-                    return;
+                    var node = new TrieNode
+                    {
+                        Key = keySequence[i]
+                    };
+
+                    var isLastElement = i == keySequence.Length - 1;
+                    if (isLastElement)
+                        node.Value = entity;
+                    
+                    chain.Add(node);
                 }
 
-                var nextKey = new NullWrapper<TKeyElement>(keySequence[currentIndex + 1]);
-                
-                TrieNode nextNode;
-                var hasMatchingChildForPrefix = Children.TryGetValue(nextKey, out nextNode);
+                return chain;
+            }
 
-                if (!hasMatchingChildForPrefix)
-                {
-                    nextNode = new TrieNode()
-                    {
-                        Key = nextKey.Value
-                    };
-                    Children.Add(nextKey, nextNode);
-                }   
-
-                nextNode.Add(entity, keySequence, currentIndex+1);
+            public void Add2(List<TrieNode> trieNodeChain)
+            {
+                // TODO implement proper insertion of the nodes into the trie
             }
             
-            public (TValue value, int foundAtIndex) GetLongestMatch(TKeyElement[] remainingPrefixElements, int currentIndex)
+            public void Add(TValue entity, TKeyElement[] keySequence, int currentIndex = -1)
             {
+                if (currentIndex < 0)
+                {
+                    var startKey = new NullWrapper<TKeyElement>(keySequence[0]);
+                    TrieNode nextNode;
+                    var hasMatchingChildForPrefix = Children.TryGetValue(startKey, out nextNode);
+                    if (!hasMatchingChildForPrefix)
+                    {
+                        nextNode = new TrieNode()
+                        {
+                            Key = startKey.Value
+                        };
+                        Children.Add(startKey, nextNode);
+                    }   
+
+                    nextNode.Add(entity, keySequence, 1);
+                }
+                else
+                {
+                    var currentKey = keySequence[currentIndex];
+                    Key = currentKey;
+                
+                    // If this is the last part of the keys, place the entity at this node
+                    if (currentIndex == keySequence.Length - 1)
+                    {
+                        Value = entity;
+                        return;
+                    }
+
+                    var nextKey = new NullWrapper<TKeyElement>(keySequence[currentIndex + 1]);
+                
+                    TrieNode nextNode;
+                    var hasMatchingChildForPrefix = Children.TryGetValue(nextKey, out nextNode);
+
+                    if (!hasMatchingChildForPrefix)
+                    {
+                        nextNode = new TrieNode()
+                        {
+                            Key = nextKey.Value
+                        };
+                        Children.Add(nextKey, nextNode);
+                    }   
+
+                    nextNode.Add(entity, keySequence, currentIndex+1);
+                }
+            }
+            
+            public (TValue value, int foundAtIndex) GetLongestMatch(TKeyElement[] remainingPrefixElements, int currentIndex = -1)
+            {
+                // Special logic for the root node
+                if (currentIndex < 0)
+                {
+                    return Children
+                            .Select(t => t.Value.GetLongestMatch(remainingPrefixElements, 0))
+                            .Where(m => m.value != null)
+                            .OrderByDescending(m => m.foundAtIndex)
+                            .FirstOrDefault()
+                        ;
+                }
+                
                 var isLastPrefixElement = currentIndex == remainingPrefixElements.Length - 1;
                 var currentKey = remainingPrefixElements[currentIndex];
                 var currentKeyMatchesNodeKey = currentKey.Equals(Key) || currentKey.Equals(WildCard) || Key.Equals(WildCard);
@@ -90,6 +145,10 @@ namespace JNysteen.FileTypeIdentifier
                 // If this is the last element of the prefix, we'll return whatever value is found here - if the keys match
                 if (isLastPrefixElement)
                     return currentKeyMatchesNodeKey ? (Value, currentIndex) : default;
+
+                // If the current prefix does not match the key of the current node, and the node is not a wildcard, it is not a match
+                if (!currentKeyMatchesNodeKey)
+                    return default;
 
                 // Otherwise, we'll look further into the trie for the longest match we can find
                 var nextKey = remainingPrefixElements[currentIndex + 1];
